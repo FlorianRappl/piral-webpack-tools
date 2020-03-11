@@ -1,0 +1,44 @@
+{
+  "name": "piral-cli-webpack",
+  "version": "0.1.0",
+  "description": "Integrates webpack into the Piral CLI for debugging and building pilets.",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlorianRappl/piral-cli-webpack.git"
+  },
+  "keywords": [
+    "piral-cli",
+    "piral",
+    "plugin",
+    "webpack",
+    "command"
+  ],
+  "author": "Florian Rappl <mail@florian-rappl.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlorianRappl/piral-cli-webpack/issues"
+  },
+  "homepage": "https://github.com/FlorianRappl/piral-cli-webpack#readme",
+  "devDependencies": {
+    "@types/node": "^13.9.0",
+    "@types/terser-webpack-plugin": "^2.2.0",
+    "@types/webpack": "^4.41.7",
+    "@types/webpack-dev-server": "^3.10.0",
+    "@types/yargs": "^15.0.0",
+    "piral-cli": "latest"
+  },
+  "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "file-loader": "^5.1.0",
+    "source-map-loader": "^0.2.4",
+    "terser-webpack-plugin": "^2.3.5",
+    "webpack": "4.42.0",
+    "webpack-dev-server": "3.10.3"
+  }
+}
