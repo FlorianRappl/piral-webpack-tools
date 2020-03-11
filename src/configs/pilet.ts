@@ -1,7 +1,7 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import { join, resolve } from 'path';
-import { getInfos } from './shared';
+import { join } from 'path';
+import { getEnvironment, getRules } from './common';
 
 export function getPiletConfig(
   baseDir = process.cwd(),
@@ -10,7 +10,7 @@ export function getPiletConfig(
   srcDir = 'src',
   entryFile = 'index',
 ): webpack.Configuration {
-  const { develop, test, production, env } = getInfos();
+  const { develop, test, production, env } = getEnvironment();
   const piletPkg = require(join(baseDir, 'package.json'));
   const shellPkg = require(join(piletPkg.piral.name, 'package.json'));
 
@@ -77,36 +77,7 @@ export function getPiletConfig(
     },
 
     module: {
-      rules: [
-        {
-          test: /\.(png|jpe?g|gif|mp4|mp3|svg|ogg|webp|wav)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                esModule: false,
-              },
-            },
-          ],
-        },
-        {
-          test: /\.tsx?$/,
-          loaders: [
-            {
-              loader: 'awesome-typescript-loader',
-              options: {
-                tsconfig: resolve(baseDir, 'tsconfig.json'),
-              },
-            },
-          ],
-        },
-        {
-          enforce: 'pre',
-          test: /\.js$/,
-          loader: 'source-map-loader',
-          exclude: resolve(baseDir, 'node_modules'),
-        },
-      ],
+      rules: getRules(baseDir),
     },
 
     optimization: {

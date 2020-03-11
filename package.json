@@ -1,6 +1,6 @@
 {
   "name": "piral-cli-webpack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Integrates webpack into the Piral CLI for debugging and building pilets.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
