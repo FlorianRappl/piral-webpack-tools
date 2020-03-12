@@ -11,7 +11,7 @@
     "declaration": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "moduleResolution": "node",
     "baseUrl": "."

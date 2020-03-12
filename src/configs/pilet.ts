@@ -1,7 +1,9 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import { join } from 'path';
+import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import * as ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import { getEnvironment, getRules } from './common';
+import { join } from 'path';
 
 export function getPiletConfig(
   baseDir = process.cwd(),
@@ -18,8 +20,12 @@ export function getPiletConfig(
   const src = join(baseDir, srcDir);
   const app = join(baseDir, 'node_modules', piletPkg.piral.name, 'app');
 
-  const shared = shellPkg.pilets?.externals ?? [];
-  const externals = [...shared, ...Object.keys(piletPkg.peerDependencies)];
+  const piralExternals = shellPkg.pilets?.externals ?? [];
+  const piletExternals = piletPkg.externals ?? [];
+  const peerDependencies = Object.keys(piletPkg.peerDependencies ?? {});
+  const externals = [...piralExternals, ...piletExternals, ...peerDependencies];
+  const shortName = piletPkg.name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
 
   function getFileName() {
     const name = develop ? 'dev' : 'prod';
@@ -69,6 +75,7 @@ export function getPiletConfig(
       filename: getFileName(),
       library: piletPkg.name,
       libraryTarget: 'umd',
+      jsonpFunction,
     },
 
     resolve: {
@@ -86,6 +93,9 @@ export function getPiletConfig(
           terserOptions: {
             warnings: false,
             ie8: true,
+            output: {
+              comments: /^@pilet/,
+            },
           },
         }),
       ],
@@ -95,6 +105,30 @@ export function getPiletConfig(
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(env),
       }),
+
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+      }),
+
+      new webpack.BannerPlugin({
+        banner: `//@pilet v:1(${jsonpFunction})`,
+        entryOnly: true,
+        raw: true,
+      }),
+
+      new ReplaceInFileWebpackPlugin([
+        {
+          dir: dist,
+          files: [getFileName()],
+          rules: [
+            {
+              search: /^\!function\s?\(e,\s?t\)\s?\{/m,
+              replace: `!function(e,t){function define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(d.map(window.${jsonpFunction})));}define.amd=!0;`,
+            },
+          ],
+        },
+      ]),
     ]),
   };
 }

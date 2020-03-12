@@ -29,9 +29,20 @@ Right now it includes:
 - `awesome-typescript-loader`,
 - `file-loader`,
 - `source-map-loader`,
+- `sass-loader`,
+- `css-loader`,
+- `style-loader`,
+- `mini-css-extract-plugin`,
+- `replace-in-file-webpack-plugin`,
 - `terser-webpack-plugin`,
 - `webpack`, and
 - `webpack-dev-server`.
+
+As such it should be prepared to include assets (images, videos, ...), stylesheets (CSS and SASS), and work with TypeScript.
+
+> Right now the output of this plugin is for the **v1** pilet schema only!
+
+No support for the legacy **v0** pilet schema.
 
 ### Building and Running
 

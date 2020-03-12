@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { RuleSetRule } from 'webpack';
+import { loader } from 'mini-css-extract-plugin';
 
 export function getEnvironment() {
   const env = process.env.NODE_ENV || 'development';
@@ -15,7 +16,13 @@ export function getEnvironment() {
   };
 }
 
+export function getStyleLoader() {
+  return process.env.NODE_ENV !== 'production' ? 'style-loader' : loader;
+}
+
 export function getRules(baseDir: string): Array<RuleSetRule> {
+  const styleLoader = getStyleLoader();
+
   return [
     {
       test: /\.(png|jpe?g|gif|mp4|mp3|svg|ogg|webp|wav)$/i,
@@ -27,6 +34,14 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
           },
         },
       ],
+    },
+    {
+      test: /\.s[ac]ss$/i,
+      use: [styleLoader, 'css-loader', 'sass-loader'],
+    },
+    {
+      test: /\.css$/i,
+      use: [styleLoader, 'css-loader'],
     },
     {
       test: /\.tsx?$/,
