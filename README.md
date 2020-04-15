@@ -4,9 +4,7 @@
 
 Plugin for the `piral-cli`. Adds command line options to debug or build using webpack.
 
-Integrates webpack for debugging and building **pilets**. You can customize the webpack config or use any webpack plugin you'd like to.
-
-> In the future this plugin may support **Piral instances**, too.
+Integrates webpack for debugging and building **pilets** and **Piral instances**. You can customize the webpack config or use any webpack plugin you'd like to.
 
 ## Installation
 
@@ -32,6 +30,7 @@ Right now it includes:
 - `sass-loader`,
 - `css-loader`,
 - `style-loader`,
+- `html-webpack-plugin`,
 - `mini-css-extract-plugin`,
 - `replace-in-file-webpack-plugin`,
 - `terser-webpack-plugin`,
@@ -44,7 +43,7 @@ As such it should be prepared to include assets (images, videos, ...), styleshee
 
 No support for the legacy **v0** pilet schema.
 
-### Building and Running
+### Building and Running a Pilet
 
 Building a pilet is as simple as calling:
 
@@ -56,6 +55,22 @@ Likewise, running the dev server is just as simple:
 
 ```sh
 pilet debug-wp
+```
+
+### Building and Running a Pilet Instance
+
+Building a Piral instance is as simple as calling:
+
+```sh
+piral build-wp
+```
+
+This builds both, the emulator package (`dist/develop`) and the release files (`dist/release`).
+
+Likewise, running the dev server is just as simple:
+
+```sh
+piral debug-wp
 ```
 
 ### Customizing
