@@ -55,6 +55,14 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       ],
     },
     {
+      test: /\.codegen$/,
+      use: [
+        {
+          loader: require.resolve('../loaders/codegen'),
+        },
+      ],
+    },
+    {
       enforce: 'pre',
       test: /\.js$/,
       loader: 'source-map-loader',
