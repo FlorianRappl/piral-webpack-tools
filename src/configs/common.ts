@@ -1,6 +1,7 @@
+import chalk from 'chalk';
+import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
-import { RuleSetRule } from 'webpack';
-import { loader } from 'mini-css-extract-plugin';
+import { RuleSetRule, ProgressPlugin, DefinePlugin, optimize } from 'webpack';
 
 export function getEnvironment() {
   const env = process.env.NODE_ENV || 'development';
@@ -45,8 +46,59 @@ export function isLocal(path: string) {
   return false;
 }
 
+export function getPlugins(
+  plugins: Array<any>,
+  progress: boolean,
+  production: boolean,
+  variables: Record<string, string>,
+) {
+  const otherPlugins = [
+    new DefinePlugin(getDefineVariables(variables)),
+
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+  ];
+
+  if (progress) {
+    otherPlugins.push(
+      new ProgressPlugin((percent, msg) => {
+        percent = Math.floor(percent * 100);
+        process.stdout.clearLine(0);
+        process.stdout.cursorTo(0);
+
+        if (percent !== undefined) {
+          process.stdout.write(' (');
+
+          for (let i = 0; i <= 100; i += 10) {
+            if (i <= percent) {
+              process.stdout.write(chalk.greenBright('#'));
+            } else {
+              process.stdout.write('#');
+            }
+          }
+
+          process.stdout.write(`) ${percent}% : `);
+          process.stdout.write(`${chalk.cyanBright(msg)}`);
+
+          if (percent === 100) {
+            process.stdout.write(`${chalk.cyanBright('Complilation completed\n')}`);
+          }
+        }
+      }),
+    );
+  }
+
+  if (production) {
+    otherPlugins.push(new optimize.OccurrenceOrderPlugin(true));
+  }
+
+  return plugins.concat(otherPlugins);
+}
+
 export function getStyleLoader() {
-  return process.env.NODE_ENV !== 'production' ? 'style-loader' : loader;
+  return process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader;
 }
 
 export function getRules(baseDir: string): Array<RuleSetRule> {

@@ -19,15 +19,19 @@ const plugin: CliPlugin = (cli) => {
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
         .default('config', 'webpack.config.js')
+        .boolean('progress')
+        .describe('progress', 'Shows the progress of the bundling process.')
+        .default('progress', false)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       process.env.NODE_ENV = 'production';
+      const progress = args.progress as boolean;
       const baseDir = args.base as string;
       const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiletConfig(baseDir), otherConfigPath);
+      const wpConfig = extendConfig(getPiletConfig(baseDir, progress), otherConfigPath);
 
       return new Promise((resolve, reject) => {
         webpack(wpConfig, (err, stats) => {
@@ -67,16 +71,20 @@ const plugin: CliPlugin = (cli) => {
         .number('port')
         .describe('port', 'The port for running the dev server.')
         .default('port', 1234)
+        .boolean('progress')
+        .describe('progress', 'Shows the progress of the bundling process.')
+        .default('progress', false)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       process.env.NODE_ENV = 'development';
+      const progress = args.progress as boolean;
       const port = args.port as number;
       const baseDir = args.base as string;
       const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiletConfig(baseDir, port), otherConfigPath);
+      const wpConfig = extendConfig(getPiletConfig(baseDir, progress, port), otherConfigPath);
 
       return new Promise((_, reject) => {
         const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);
@@ -102,11 +110,15 @@ const plugin: CliPlugin = (cli) => {
         .choices('type', ['all', ...normalTypes])
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', 'all')
+        .boolean('progress')
+        .describe('progress', 'Shows the progress of the bundling process.')
+        .default('progress', false)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     async run(args) {
+      const progress = args.progress as boolean;
       const baseDir = args.base as string;
       const argsType = args.type as string;
       const types: Array<string> = [];
@@ -123,7 +135,7 @@ const plugin: CliPlugin = (cli) => {
         process.env.NODE_ENV = release ? 'production' : 'development';
         const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
         const target = emulator ? `dist/develop/app` : `dist/release`;
-        const wpConfig = extendConfig(getPiralConfig(baseDir, undefined, target, emulator), otherConfigPath);
+        const wpConfig = extendConfig(getPiralConfig(baseDir, progress, undefined, target, emulator), otherConfigPath);
 
         await new Promise((resolve, reject) => {
           webpack(wpConfig, (err, stats) => {
@@ -168,16 +180,20 @@ const plugin: CliPlugin = (cli) => {
         .number('port')
         .describe('port', 'The port for running the dev server.')
         .default('port', 1234)
+        .boolean('progress')
+        .describe('progress', 'Shows the progress of the bundling process.')
+        .default('progress', false)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       process.env.NODE_ENV = 'development';
+      const progress = args.progress as boolean;
       const port = args.port as number;
       const baseDir = args.base as string;
       const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiralConfig(baseDir, port), otherConfigPath);
+      const wpConfig = extendConfig(getPiralConfig(baseDir, progress, port), otherConfigPath);
 
       return new Promise((_, reject) => {
         const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);

@@ -32,7 +32,6 @@ Right now it includes:
 - `style-loader`,
 - `html-webpack-plugin`,
 - `mini-css-extract-plugin`,
-- `replace-in-file-webpack-plugin`,
 - `terser-webpack-plugin`,
 - `webpack`, and
 - `webpack-dev-server`.

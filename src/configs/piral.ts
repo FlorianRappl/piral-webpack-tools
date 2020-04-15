@@ -1,17 +1,17 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import { debugPiletApi, compatVersion } from 'piral-cli/lib/common/info';
 import { load } from 'cheerio';
 import { join, resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
-import { getEnvironment, getRules, isLocal, getDefineVariables, setEnvironment } from './common';
+import { getEnvironment, getRules, isLocal, setEnvironment, getPlugins } from './common';
 
-function getVariables(piralPkg: any): Record<string, string> {
+function getVariables(piralPkg: any, env: string): Record<string, string> {
   const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
   const dependencies = piralPkg.pilets?.externals ?? [];
   return {
+    NODE_ENV: env,
     BUILD_TIME: new Date().toDateString(),
     BUILD_TIME_FULL: new Date().toISOString(),
     BUILD_PCKG_VERSION: piralPkg.version,
@@ -45,6 +45,7 @@ function extractParts(content: CheerioStatic) {
 
 export function getPiralConfig(
   baseDir = process.cwd(),
+  progress = false,
   port = 1234,
   distDir = 'dist',
   emulator = false,
@@ -57,7 +58,7 @@ export function getPiralConfig(
   const src = dirname(template);
   const templateContent = load(readFileSync(template, 'utf8'));
   const entries = extractParts(templateContent);
-  const variables = getVariables(piralPkg);
+  const variables = getVariables(piralPkg, env);
 
   if (develop) {
     variables.DEBUG_PIRAL = compatVersion;
@@ -72,14 +73,6 @@ export function getPiralConfig(
   function getFileName() {
     const name = develop ? 'dev' : 'prod';
     return `index.${name}.js`;
-  }
-
-  function getPlugins(plugins: Array<any>) {
-    if (production) {
-      return plugins.concat([new webpack.optimize.OccurrenceOrderPlugin(true)]);
-    }
-
-    return plugins;
   }
 
   return {
@@ -123,20 +116,15 @@ export function getPiralConfig(
       ],
     },
 
-    plugins: getPlugins([
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(env),
-        ...getDefineVariables(variables),
-      }),
-
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
-      }),
-
-      new HtmlWebpackPlugin({
-        templateContent: templateContent.html(),
-      }),
-    ]),
+    plugins: getPlugins(
+      [
+        new HtmlWebpackPlugin({
+          templateContent: templateContent.html(),
+        }),
+      ],
+      progress,
+      production,
+      variables,
+    ),
   };
 }
