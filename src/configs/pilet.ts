@@ -2,8 +2,18 @@ import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
-import { getEnvironment, getRules } from './common';
+import { getEnvironment, getRules, setEnvironment, getDefineVariables } from './common';
 import { join } from 'path';
+
+function getVariables(piletPkg: any): Record<string, string> {
+  return {
+    BUILD_TIME: new Date().toDateString(),
+    BUILD_TIME_FULL: new Date().toISOString(),
+    BUILD_PCKG_VERSION: piletPkg.version,
+    BUILD_PCKG_NAME: piletPkg.name,
+    PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
+  };
+}
 
 export function getPiletConfig(
   baseDir = process.cwd(),
@@ -19,6 +29,9 @@ export function getPiletConfig(
   const dist = join(baseDir, distDir);
   const src = join(baseDir, srcDir);
   const app = join(baseDir, 'node_modules', piletPkg.piral.name, 'app');
+  const variables = getVariables(piletPkg);
+
+  setEnvironment(variables);
 
   const piralExternals = shellPkg.pilets?.externals ?? [];
   const piletExternals = piletPkg.externals ?? [];
@@ -104,6 +117,7 @@ export function getPiletConfig(
     plugins: getPlugins([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(env),
+        ...getDefineVariables(variables),
       }),
 
       new MiniCssExtractPlugin({

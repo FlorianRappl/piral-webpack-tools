@@ -16,6 +16,35 @@ export function getEnvironment() {
   };
 }
 
+export function setEnvironment(variables: Record<string, string>) {
+  Object.keys(variables).forEach((key) => (process.env[key] = variables[key]));
+}
+
+export function getDefineVariables(variables: Record<string, string>) {
+  return Object.entries(variables).reduce((obj, [name, value]) => {
+    obj[`process.env.${name}`] = JSON.stringify(value);
+    return obj;
+  }, {});
+}
+
+export function isLocal(path: string) {
+  if (path) {
+    if (path.startsWith(':')) {
+      return false;
+    } else if (path.startsWith('http:')) {
+      return false;
+    } else if (path.startsWith('https:')) {
+      return false;
+    } else if (path.startsWith('data:')) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
 export function getStyleLoader() {
   return process.env.NODE_ENV !== 'production' ? 'style-loader' : loader;
 }

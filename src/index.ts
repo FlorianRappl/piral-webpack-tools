@@ -3,9 +3,12 @@ import * as WebpackDevServer from 'webpack-dev-server';
 import { resolve } from 'path';
 import { CliPlugin } from 'piral-cli';
 import { getPiletConfig, getPiralConfig } from './configs';
+import { createEmulatorPackage } from './emulator';
 import { extendConfig } from './helpers';
 
-const plugin: CliPlugin = cli => {
+const normalTypes = ['develop', 'release'];
+
+const plugin: CliPlugin = (cli) => {
   cli.withCommand({
     name: 'buildpack-pilet',
     alias: ['build-wp-pilet'],
@@ -77,7 +80,7 @@ const plugin: CliPlugin = cli => {
 
       return new Promise((_, reject) => {
         const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);
-        devServer.listen(port, err => {
+        devServer.listen(port, (err) => {
           if (err) {
             reject(err);
           }
@@ -96,38 +99,59 @@ const plugin: CliPlugin = cli => {
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
         .default('config', 'webpack.config.js')
+        .choices('type', ['all', ...normalTypes])
+        .describe('type', 'Selects the target type of the build. "all" builds all target types.')
+        .default('type', 'all')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
-    run(args) {
-      process.env.NODE_ENV = 'production';
+    async run(args) {
       const baseDir = args.base as string;
-      const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiralConfig(baseDir), otherConfigPath);
+      const argsType = args.type as string;
+      const types: Array<string> = [];
 
-      return new Promise((resolve, reject) => {
-        webpack(wpConfig, (err, stats) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            console.log(
-              stats.toString({
-                chunks: false,
-                colors: true,
-                usedExports: true,
-              }),
-            );
+      if (args.type === 'all') {
+        types.push(...normalTypes);
+      } else if (normalTypes.includes(argsType)) {
+        types.push(argsType);
+      }
 
-            if (stats.hasErrors()) {
-              reject(stats.toJson());
+      for (const type of types) {
+        const release = type === 'release';
+        const emulator = !release;
+        process.env.NODE_ENV = release ? 'production' : 'development';
+        const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
+        const target = emulator ? `dist/develop/app` : `dist/release`;
+        const wpConfig = extendConfig(getPiralConfig(baseDir, undefined, target, emulator), otherConfigPath);
+
+        await new Promise((resolve, reject) => {
+          webpack(wpConfig, (err, stats) => {
+            if (err) {
+              console.error(err);
+              reject(err);
             } else {
-              resolve();
+              console.log(
+                stats.toString({
+                  chunks: false,
+                  colors: true,
+                  usedExports: true,
+                }),
+              );
+
+              if (stats.hasErrors()) {
+                reject(stats.toJson());
+              } else {
+                resolve();
+              }
             }
-          }
+          });
         });
-      });
+
+        if (emulator) {
+          await createEmulatorPackage(baseDir, target);
+        }
+      }
     },
   });
 
@@ -157,7 +181,7 @@ const plugin: CliPlugin = cli => {
 
       return new Promise((_, reject) => {
         const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);
-        devServer.listen(port, err => {
+        devServer.listen(port, (err) => {
           if (err) {
             reject(err);
           }

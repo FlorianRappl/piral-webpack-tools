@@ -2,43 +2,34 @@ import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import { debugPiletApi, compatVersion } from 'piral-cli/lib/common/info';
 import { load } from 'cheerio';
 import { join, resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
-import { getEnvironment, getRules } from './common';
+import { getEnvironment, getRules, isLocal, getDefineVariables, setEnvironment } from './common';
 
-function setEnvironmentVariables(piralPkg: any) {
-  const excludedDependencies = ['piral', 'piral-core', 'piral-base'];
+function getVariables(piralPkg: any): Record<string, string> {
+  const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
   const dependencies = piralPkg.pilets?.externals ?? [];
-  process.env.BUILD_TIME = new Date().toDateString();
-  process.env.BUILD_TIME_FULL = new Date().toISOString();
-  process.env.BUILD_PCKG_VERSION = piralPkg.version;
-  process.env.BUILD_PCKG_NAME = piralPkg.name;
-  process.env.PIRAL_CLI_VERSION = require('piral-cli/package.json').version;
-  process.env.SHARED_DEPENDENCIES = dependencies.filter(m => !excludedDependencies.includes(m)).join(',');
-}
-
-function isLocal(path: string) {
-  if (path) {
-    if (path.startsWith(':')) {
-      return false;
-    } else if (path.startsWith('http:')) {
-      return false;
-    } else if (path.startsWith('https:')) {
-      return false;
-    } else if (path.startsWith('data:')) {
-      return false;
-    }
-
-    return true;
-  }
-
-  return false;
+  return {
+    BUILD_TIME: new Date().toDateString(),
+    BUILD_TIME_FULL: new Date().toISOString(),
+    BUILD_PCKG_VERSION: piralPkg.version,
+    BUILD_PCKG_NAME: piralPkg.name,
+    PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
+    SHARED_DEPENDENCIES: dependencies.filter((m) => !excludedDependencies.includes(m)).join(','),
+  };
 }
 
 function extractParts(content: CheerioStatic) {
-  const sheets = content('link[href]').filter((_, e) => isLocal(e.attribs.href)).remove().toArray();
-  const scripts = content('script[src]').filter((_, e) => isLocal(e.attribs.src)).remove().toArray();
+  const sheets = content('link[href]')
+    .filter((_, e) => isLocal(e.attribs.href))
+    .remove()
+    .toArray();
+  const scripts = content('script[src]')
+    .filter((_, e) => isLocal(e.attribs.src))
+    .remove()
+    .toArray();
   const files: Array<string> = [];
 
   for (const sheet of sheets) {
@@ -56,6 +47,7 @@ export function getPiralConfig(
   baseDir = process.cwd(),
   port = 1234,
   distDir = 'dist',
+  emulator = false,
 ): webpack.Configuration {
   const { develop, test, production, env } = getEnvironment();
 
@@ -65,8 +57,17 @@ export function getPiralConfig(
   const src = dirname(template);
   const templateContent = load(readFileSync(template, 'utf8'));
   const entries = extractParts(templateContent);
+  const variables = getVariables(piralPkg);
 
-  setEnvironmentVariables(piralPkg);
+  if (develop) {
+    variables.DEBUG_PIRAL = compatVersion;
+  }
+
+  if (emulator) {
+    variables.DEBUG_PILET = debugPiletApi;
+  }
+
+  setEnvironment(variables);
 
   function getFileName() {
     const name = develop ? 'dev' : 'prod';
@@ -87,7 +88,7 @@ export function getPiralConfig(
     mode: production ? 'production' : 'development',
 
     entry: {
-      main: entries.map(entry => join(src, entry)),
+      main: entries.map((entry) => join(src, entry)),
     },
 
     devServer: {
@@ -125,7 +126,7 @@ export function getPiralConfig(
     plugins: getPlugins([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(env),
-        'process.env.SHARED_DEPENDENCIES': JSON.stringify(process.env.SHARED_DEPENDENCIES),
+        ...getDefineVariables(variables),
       }),
 
       new MiniCssExtractPlugin({
