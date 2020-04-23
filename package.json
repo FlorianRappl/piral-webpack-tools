@@ -38,6 +38,7 @@
     "piral-cli": "latest"
   },
   "dependencies": {
+    "chalk": "^2.2.0",
     "awesome-typescript-loader": "^5.2.1",
     "cheerio": "^1.0.0-rc.3",
     "css-loader": "^3.4.2",
