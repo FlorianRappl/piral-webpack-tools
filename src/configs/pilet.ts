@@ -1,8 +1,9 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import { PostProcessPlugin } from '../plugins/PostProcessPlugin';
-import { getEnvironment, getRules, setEnvironment, getPlugins } from './common';
 import { join } from 'path';
+import { getOrMakeAppDir } from './app';
+import { getEnvironment, getRules, setEnvironment, getPlugins } from './common';
+import { PostProcessPlugin } from '../plugins/PostProcessPlugin';
 
 function getVariables(piletPkg: any, env: string): Record<string, string> {
   return {
@@ -15,24 +16,17 @@ function getVariables(piletPkg: any, env: string): Record<string, string> {
   };
 }
 
-export function getPiletConfig(
+export async function getPiletConfig(
   baseDir = process.cwd(),
   progress = false,
   port = 1234,
   distDir = 'dist',
   srcDir = 'src',
   entryFile = 'index',
-): webpack.Configuration {
+): Promise<webpack.Configuration> {
   const { develop, test, production, env } = getEnvironment();
   const piletPkg = require(join(baseDir, 'package.json'));
   const shellPkg = require(join(piletPkg.piral.name, 'package.json'));
-
-  const dist = join(baseDir, distDir);
-  const src = join(baseDir, srcDir);
-  const app = join(baseDir, 'node_modules', piletPkg.piral.name, 'app');
-  const variables = getVariables(piletPkg, env);
-
-  setEnvironment(variables);
 
   const piralExternals = shellPkg.pilets?.externals ?? [];
   const piletExternals = piletPkg.externals ?? [];
@@ -40,6 +34,13 @@ export function getPiletConfig(
   const externals = [...piralExternals, ...piletExternals, ...peerDependencies];
   const shortName = piletPkg.name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
+
+  const dist = join(baseDir, distDir);
+  const src = join(baseDir, srcDir);
+  const app = await getOrMakeAppDir(shellPkg, progress);
+  const variables = getVariables(piletPkg, env);
+
+  setEnvironment(variables);
 
   function getFileName() {
     const name = develop ? 'index.dev' : 'index';

@@ -1,12 +1,8 @@
-import * as webpack from 'webpack';
-import * as WebpackDevServer from 'webpack-dev-server';
-import { resolve } from 'path';
 import { CliPlugin } from 'piral-cli';
-import { getPiletConfig, getPiralConfig } from './configs';
-import { createEmulatorPackage } from './emulator';
-import { extendConfig } from './helpers';
-
-const normalTypes = ['develop', 'release'];
+import { buildPilet } from './commands/build-pilet';
+import { buildPiral, normalTypes } from './commands/build-piral';
+import { debugPiral } from './commands/debug-piral';
+import { debugPilet } from './commands/debug-pilet';
 
 const plugin: CliPlugin = (cli) => {
   cli.withCommand({
@@ -27,34 +23,10 @@ const plugin: CliPlugin = (cli) => {
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      process.env.NODE_ENV = 'production';
       const progress = args.progress as boolean;
       const baseDir = args.base as string;
-      const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiletConfig(baseDir, progress), otherConfigPath);
-
-      return new Promise((resolve, reject) => {
-        webpack(wpConfig, (err, stats) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            console.log(
-              stats.toString({
-                chunks: false,
-                colors: true,
-                usedExports: true,
-              }),
-            );
-
-            if (stats.hasErrors()) {
-              reject(stats.toJson());
-            } else {
-              resolve();
-            }
-          }
-        });
-      });
+      const config = args.config as string;
+      return buildPilet(baseDir, config, progress);
     },
   });
 
@@ -79,21 +51,11 @@ const plugin: CliPlugin = (cli) => {
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      process.env.NODE_ENV = 'development';
       const progress = args.progress as boolean;
       const port = args.port as number;
       const baseDir = args.base as string;
-      const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiletConfig(baseDir, progress, port), otherConfigPath);
-
-      return new Promise((_, reject) => {
-        const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);
-        devServer.listen(port, (err) => {
-          if (err) {
-            reject(err);
-          }
-        });
-      });
+      const config = args.config as string;
+      return debugPilet(baseDir, port, config, progress);
     },
   });
 
@@ -117,53 +79,12 @@ const plugin: CliPlugin = (cli) => {
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
-    async run(args) {
+    run(args) {
       const progress = args.progress as boolean;
       const baseDir = args.base as string;
       const argsType = args.type as string;
-      const types: Array<string> = [];
-
-      if (args.type === 'all') {
-        types.push(...normalTypes);
-      } else if (normalTypes.includes(argsType)) {
-        types.push(argsType);
-      }
-
-      for (const type of types) {
-        const release = type === 'release';
-        const emulator = !release;
-        process.env.NODE_ENV = release ? 'production' : 'development';
-        const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-        const target = emulator ? `dist/develop/app` : `dist/release`;
-        const wpConfig = extendConfig(getPiralConfig(baseDir, progress, undefined, target, emulator), otherConfigPath);
-
-        await new Promise((resolve, reject) => {
-          webpack(wpConfig, (err, stats) => {
-            if (err) {
-              console.error(err);
-              reject(err);
-            } else {
-              console.log(
-                stats.toString({
-                  chunks: false,
-                  colors: true,
-                  usedExports: true,
-                }),
-              );
-
-              if (stats.hasErrors()) {
-                reject(stats.toJson());
-              } else {
-                resolve();
-              }
-            }
-          });
-        });
-
-        if (emulator) {
-          await createEmulatorPackage(baseDir, target);
-        }
-      }
+      const config = args.config as string;
+      return buildPiral(baseDir, argsType, config, progress);
     },
   });
 
@@ -188,21 +109,11 @@ const plugin: CliPlugin = (cli) => {
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      process.env.NODE_ENV = 'development';
       const progress = args.progress as boolean;
       const port = args.port as number;
       const baseDir = args.base as string;
-      const otherConfigPath = resolve(process.cwd(), baseDir, args.config as string);
-      const wpConfig = extendConfig(getPiralConfig(baseDir, progress, port), otherConfigPath);
-
-      return new Promise((_, reject) => {
-        const devServer = new WebpackDevServer(webpack(wpConfig), wpConfig.devServer);
-        devServer.listen(port, (err) => {
-          if (err) {
-            reject(err);
-          }
-        });
-      });
+      const config = args.config as string;
+      return debugPiral(baseDir, port, config, progress);
     },
   });
 };

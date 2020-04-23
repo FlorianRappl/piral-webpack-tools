@@ -43,13 +43,13 @@ function extractParts(content: CheerioStatic) {
   return files;
 }
 
-export function getPiralConfig(
+export async function getPiralConfig(
   baseDir = process.cwd(),
   progress = false,
   port = 1234,
   distDir = 'dist',
   emulator = false,
-): webpack.Configuration {
+): Promise<webpack.Configuration> {
   const { develop, test, production, env } = getEnvironment();
 
   const piralPkg = require(join(baseDir, 'package.json'));
