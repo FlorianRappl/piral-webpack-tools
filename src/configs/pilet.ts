@@ -60,6 +60,15 @@ export function getPiletConfig(
       compress: true,
       historyApiFallback: true,
       port,
+      headers: {
+        // force no cache
+        'cache-control': 'no-cache, no-store, must-revalidate',
+        pragma: 'no-cache',
+        expires: '0',
+        get etag() {
+          return Math.random().toString(36).substr(2);
+        },
+      },
       before(app: any) {
         app.get('/([$])pilet-api', (_: any, res: any) => {
           res.json({
