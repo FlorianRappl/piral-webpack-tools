@@ -13,6 +13,10 @@ import {
   updateExistingJson,
 } from 'piral-cli/lib/common/io';
 
+export function removeDir(dir: string) {
+  return removeDirectory(dir);
+}
+
 //TODO this code should come 100% from Piral-CLI!
 export async function createEmulatorPackage(sourceDir: string, targetDir: string) {
   const piralPkg = require(join(sourceDir, 'package.json'));
