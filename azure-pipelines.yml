@@ -21,6 +21,7 @@ steps:
 - task: npmAuthenticate@0
   inputs:
     customEndpoint: 'NPM connection 1'
+    workingFile: .npmrc
 
 - script: |
     yarn ci:prerelease
