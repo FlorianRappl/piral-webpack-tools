@@ -5,7 +5,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "lerna run build"
+    "ci:bootstrap": "lerna clean --yes && lerna bootstrap",
+    "ci:build": "lerna run build",
+    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
+    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish",
+    "ci:setup": "yarn ci:bootstrap && yarn ci:build && yarn ci:bootstrap",
+    "ci:version": "node tools/changelog-version.js",
+    "prettify": "prettier --config prettier.config.js --write \"packages/**/*.{ts,tsx}\""
   },
   "devDependencies": {
     "@types/jest": "^25.0.0",

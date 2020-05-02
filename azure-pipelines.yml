@@ -14,22 +14,20 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+    yarn install
+    yarn ci:setup
+  displayName: 'Yarn install and build'
+
+- task: npmAuthenticate@0
+  inputs:
+    customEndpoint: 'NPM connection 1'
 
 - script: |
-    sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1-pre.$BUILD_BUILDNUMBER/" package.json;
-  displayName: 'Preview version'
+    yarn ci:prerelease
+  displayName: 'Pre-Release if develop'
   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
 - script: |
-    npm pack
-  displayName: 'npm pack'
-
-- task: Npm@1
-  inputs:
-    command: publish
-    publishEndpoint: 'NPM connection 1'
-  displayName: 'Publish package'
-  condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/master', 'refs/heads/develop'))
+    yarn ci:release
+  displayName: 'Release if master'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
