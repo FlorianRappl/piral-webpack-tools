@@ -43,7 +43,7 @@ export async function getPiletConfig(
   setEnvironment(variables);
 
   function getFileName() {
-    const name = develop ? 'index.pilet.dev' : 'index';
+    const name = develop ? 'pilet' : 'index';
     return `${name}.js`;
   }
 

@@ -1,4 +1,5 @@
 import { CliPlugin } from 'piral-cli';
+import { defaultWebpackConfig } from './constants';
 import { buildPilet } from './commands/build-pilet';
 import { buildPiral, normalTypes } from './commands/build-piral';
 import { debugPiral } from './commands/debug-piral';
@@ -14,7 +15,7 @@ const plugin: CliPlugin = (cli) => {
       return argv
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
-        .default('config', 'webpack.config.js')
+        .default('config', defaultWebpackConfig)
         .boolean('progress')
         .describe('progress', 'Shows the progress of the bundling process.')
         .default('progress', false)
@@ -39,7 +40,7 @@ const plugin: CliPlugin = (cli) => {
       return argv
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
-        .default('config', 'webpack.config.js')
+        .default('config', defaultWebpackConfig)
         .number('port')
         .describe('port', 'The port for running the dev server.')
         .default('port', 1234)
@@ -68,7 +69,7 @@ const plugin: CliPlugin = (cli) => {
       return argv
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
-        .default('config', 'webpack.config.js')
+        .default('config', defaultWebpackConfig)
         .choices('type', ['all', ...normalTypes])
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', 'all')
@@ -97,7 +98,7 @@ const plugin: CliPlugin = (cli) => {
       return argv
         .string('config')
         .describe('config', 'The location of the optional webpack config.')
-        .default('config', 'webpack.config.js')
+        .default('config', defaultWebpackConfig)
         .number('port')
         .describe('port', 'The port for running the dev server.')
         .default('port', 1234)

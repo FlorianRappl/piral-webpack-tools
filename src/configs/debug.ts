@@ -1,8 +1,9 @@
 import { resolve, dirname, basename } from 'path';
+import { defaultWebpackConfig } from '../constants';
 import { buildPiral } from '../commands/build-piral';
 
 async function run(root: string, progress: boolean) {
-  await buildPiral(root, 'develop', 'webpack.config.js', progress, true);
+  await buildPiral(root, 'develop', defaultWebpackConfig, progress, true);
   return resolve(root, 'dist', 'develop', 'app', 'index.html');
 }
 
