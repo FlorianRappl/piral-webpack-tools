@@ -139,7 +139,8 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       test: /\.codegen$/,
       use: [
         {
-          loader: require.resolve('../loaders/codegen'),
+          loader: 'codegen-loader',
+          options: {},
         },
       ],
     },
