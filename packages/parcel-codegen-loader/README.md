@@ -9,16 +9,18 @@
 [![chat][chat]][chat-url]
 [![size][size]][size-url]
 
-# codegen-loader
+# parcel-codegen-loader
 
-The `codegen-loader` resolves `import` / `require()` on a file into a Node.js module that is evaluated during the compilation. It expects the Node.js module to generate a webpack module on the fly establishing meta programming.
+The `parcel-codegen-loader` resolves `import` / `require()` on a file into a Node.js module that is evaluated during the compilation. It expects the Node.js module to generate a webpack module on the fly establishing meta programming.
+
+It follows pretty much the [parcel-plugin-codegen](https://www.npmjs.com/package/parcel-plugin-codegen) implementation.
 
 ## Getting Started
 
-To begin, you'll need to install `codegen-loader`:
+To begin, you'll need to install `parcel-codegen-loader`:
 
 ```console
-$ npm install codegen-loader --save-dev
+$ npm install parcel-codegen-loader --save-dev
 ```
 
 Import (or `require`) the target file(s) in one of the bundle's files:
@@ -50,7 +52,7 @@ module.exports = {
         test: /\.codegen$/i,
         use: [
           {
-            loader: 'codegen-loader',
+            loader: 'parcel-codegen-loader',
           },
         ],
       },
@@ -71,7 +73,7 @@ specified to do so) and returns the public URI of the file.
 
 ## Examples
 
-The following examples show how one might use `codegen-loader` and what the result would be.
+The following examples show how one might use `parcel-codegen-loader` and what the result would be.
 
 ### Get Infos from a Remote Source
 

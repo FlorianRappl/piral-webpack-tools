@@ -139,7 +139,7 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       test: /\.codegen$/,
       use: [
         {
-          loader: 'codegen-loader',
+          loader: 'parcel-codegen-loader',
           options: {},
         },
       ],
