@@ -1,4 +1,4 @@
-import validateOptions from 'schema-utils';
+import * as validateOptions from 'schema-utils';
 import { getOptions } from 'loader-utils';
 
 const schema = {
@@ -6,6 +6,11 @@ const schema = {
   properties: {},
   additionalProperties: false,
 };
+
+function reloadGenerator(name: string) {
+  delete require.cache[require.resolve(name)];
+  return require(name);
+}
 
 export default async function loader(source: string, map: string, meta: any) {
   const options = getOptions(this);
@@ -17,15 +22,11 @@ export default async function loader(source: string, map: string, meta: any) {
 
   const name = this.resourcePath;
   const callback = this.async();
+  const generator = reloadGenerator(name);
+  const content = await generator.call(this);
 
-  delete require.cache[require.resolve(name)];
-
-  const generator = require(name);
-  const content = generator.call(this);
-  const value = await Promise.resolve(content);
-
-  if (typeof value === 'string') {
-    callback(null, value, map, meta);
+  if (typeof content === 'string') {
+    callback(null, content, map, meta);
   } else {
     callback(new Error('Unsupported return type from codegen.'), source);
   }
