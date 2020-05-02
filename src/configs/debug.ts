@@ -3,7 +3,7 @@ import { buildPiral } from '../commands/build-piral';
 
 async function run(root: string, progress: boolean) {
   await buildPiral(root, 'develop', undefined, progress, true);
-  return resolve(root, 'dist', 'develop', 'index.html');
+  return resolve(root, 'dist', 'develop', 'app', 'index.html');
 }
 
 process.on('message', async msg => {
