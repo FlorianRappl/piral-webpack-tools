@@ -105,7 +105,7 @@ Just make sure to post an issue or reach out to me on [Gitter](https://gitter.im
 
 ## License
 
-[MIT](./LICENSE)
+This plugin is released using the MIT license.
 
 [npm]: https://img.shields.io/npm/v/codegen-loader.svg
 [npm-url]: https://npmjs.com/package/codegen-loader

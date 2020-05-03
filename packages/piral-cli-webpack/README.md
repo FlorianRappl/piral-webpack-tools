@@ -22,12 +22,13 @@ This plugin comes with batteries included. You don't need to install or specify 
 
 Right now it includes:
 
-- `awesome-typescript-loader`,
+- `babel-loader`,
+- `css-loader`,
 - `file-loader`,
 - `source-map-loader`,
 - `sass-loader`,
-- `css-loader`,
 - `style-loader`,
+- `ts-loader`,
 - `html-webpack-plugin`,
 - `mini-css-extract-plugin`,
 - `terser-webpack-plugin`,
@@ -97,6 +98,12 @@ module.exports = function(config) {
 Besides the usual `--base` for overriding the base path (otherwise it is the current working directory) the `--config` option exists to override the path to the `webpack.config.js`.
 
 The `debug` commands also contain a `--port` option to set a different port than `1234`.
+
+## Contributing
+
+Contributions in any form are appreciated and much welcome!
+
+Just make sure to post an issue or reach out to me on [Gitter](https://gitter.im/piral-io/community) before starting actual work on anything. It really helps to avoid problems.
 
 ## License
 
