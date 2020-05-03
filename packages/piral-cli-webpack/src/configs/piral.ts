@@ -1,25 +1,12 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
 import { debugPiletApi, compatVersion } from 'piral-cli/lib/common/info';
 import { load } from 'cheerio';
 import { join, resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
-import { getEnvironment, getRules, isLocal, setEnvironment, getPlugins } from './common';
-
-function getVariables(piralPkg: any, env: string): Record<string, string> {
-  const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
-  const dependencies = piralPkg.pilets?.externals ?? [];
-  return {
-    NODE_ENV: env,
-    BUILD_TIME: new Date().toDateString(),
-    BUILD_TIME_FULL: new Date().toISOString(),
-    BUILD_PCKG_VERSION: piralPkg.version,
-    BUILD_PCKG_NAME: piralPkg.name,
-    PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
-    SHARED_DEPENDENCIES: dependencies.filter((m) => !excludedDependencies.includes(m)).join(','),
-  };
-}
+import { getEnvironment, getRules, isLocal, getPlugins } from './common';
 
 function extractParts(content: CheerioStatic) {
   const sheets = content('link[href]')
@@ -50,7 +37,7 @@ export async function getPiralConfig(
   distDir = 'dist',
   emulator = false,
 ): Promise<webpack.Configuration> {
-  const { develop, test, production, env } = getEnvironment();
+  const { develop, test, production } = getEnvironment();
 
   const piralPkg = require(join(baseDir, 'package.json'));
   const dist = join(baseDir, distDir);
@@ -58,17 +45,6 @@ export async function getPiralConfig(
   const src = dirname(template);
   const templateContent = load(readFileSync(template, 'utf8'));
   const entries = extractParts(templateContent);
-  const variables = getVariables(piralPkg, env);
-
-  if (develop) {
-    variables.DEBUG_PIRAL = compatVersion;
-  }
-
-  if (emulator) {
-    variables.DEBUG_PILET = debugPiletApi;
-  }
-
-  setEnvironment(variables);
 
   function getFileName() {
     const name = develop ? 'dev' : 'prod';
@@ -81,7 +57,7 @@ export async function getPiralConfig(
     mode: production ? 'production' : 'development',
 
     entry: {
-      main: entries.map((entry) => join(src, entry)),
+      main: entries.map(entry => join(src, entry)),
     },
 
     devServer: {
@@ -121,10 +97,16 @@ export async function getPiralConfig(
         new HtmlWebpackPlugin({
           templateContent: templateContent.html(),
         }),
+        new PiralInstanceWebpackPlugin(piralPkg, {
+          debug: develop && compatVersion,
+          emulator: emulator && debugPiletApi,
+          variables: {
+            PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
+          },
+        }),
       ],
       progress,
       production,
-      variables,
     ),
   };
 }

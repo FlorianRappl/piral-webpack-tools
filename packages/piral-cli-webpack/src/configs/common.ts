@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
-import { RuleSetRule, ProgressPlugin, DefinePlugin, optimize } from 'webpack';
+import { RuleSetRule, ProgressPlugin, optimize } from 'webpack';
 
 export function getEnvironment() {
   const env = process.env.NODE_ENV || 'development';
@@ -10,22 +10,10 @@ export function getEnvironment() {
   const production = env === 'production';
 
   return {
-    env,
     develop,
     test,
     production,
   };
-}
-
-export function setEnvironment(variables: Record<string, string>) {
-  Object.keys(variables).forEach((key) => (process.env[key] = variables[key]));
-}
-
-export function getDefineVariables(variables: Record<string, string>) {
-  return Object.entries(variables).reduce((obj, [name, value]) => {
-    obj[`process.env.${name}`] = JSON.stringify(value);
-    return obj;
-  }, {});
 }
 
 export function isLocal(path: string) {
@@ -50,11 +38,8 @@ export function getPlugins(
   plugins: Array<any>,
   progress: boolean,
   production: boolean,
-  variables: Record<string, string>,
 ) {
   const otherPlugins = [
-    new DefinePlugin(getDefineVariables(variables)),
-
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
