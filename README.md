@@ -1,105 +1,47 @@
-# piral-cli-webpack
+[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+
+# Piral Webpack Tools
 
 ![Azure Build Status](https://dev.azure.com/FlorianRappl/piral-cli-plugins/_apis/build/status/FlorianRappl.piral-cli-webpack?branchName=master) ![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-Plugin for the `piral-cli`. Adds command line options to debug or build using webpack.
+This repository contains the packages used to enable Webpack support in Piral. We support multiple options.
 
-Integrates webpack for debugging and building **pilets** and **Piral instances**. You can customize the webpack config or use any webpack plugin you'd like to.
+## Options
 
-## Installation
-
-Install the plugin either locally or globally.
-
-We recommend the local installation:
+The easiest option is to use the `piral-cli` and install another dev dependency `piral-webpack-plugin`.
 
 ```sh
-npm i piral-cli-webpack --save-dev
+npm i piral-webpack-plugin --save-dev
 ```
 
-## Usage
+Now new commands such as `piral build-wp` or `pilet build-wp` can be used. For details, see the [plugin's README](./packages/piral-webpack-plugin/README.md).
 
-This plugin comes with batteries included. You don't need to install or specify your Webpack version.
-
-### What's Inside
-
-Right now it includes:
-
-- `awesome-typescript-loader`,
-- `file-loader`,
-- `source-map-loader`,
-- `sass-loader`,
-- `css-loader`,
-- `style-loader`,
-- `html-webpack-plugin`,
-- `mini-css-extract-plugin`,
-- `terser-webpack-plugin`,
-- `webpack`, and
-- `webpack-dev-server`.
-
-As such it should be prepared to include assets (images, videos, ...), stylesheets (CSS and SASS), and work with TypeScript.
-
-> Right now the output of this plugin is for the **v1** pilet schema only!
-
-No support for the legacy **v0** pilet schema.
-
-### Building and Running a Pilet
-
-Building a pilet is as simple as calling:
+If you want to fully configure Webpack yourself you can just leverage either
 
 ```sh
-pilet build-wp
+npm i piral-instance-webpack-plugin --save-dev
 ```
 
-Likewise, running the dev server is just as simple:
+for your Piral instance, or
 
 ```sh
-pilet debug-wp
+npm i pilet-webpack-plugin --save-dev
 ```
 
-### Building and Running a Pilet Instance
+for pilets.
 
-Building a Piral instance is as simple as calling:
+There are also standalone plugins for things such as support for `.codegen` files or using HTML as an entry module in Webpack.
 
-```sh
-piral build-wp
-```
+## Further Reading
 
-This builds both, the emulator package (`dist/develop`) and the release files (`dist/release`).
+For development:
+- https://github.com/adierkens/webpack-inject-plugin/blob/master/src/main.ts
+- https://webpack.js.org/contribute/plugin-patterns/
 
-Likewise, running the dev server is just as simple:
-
-```sh
-piral debug-wp
-```
-
-### Customizing
-
-You can still leverage your own `webpack.config.js`. Either just export *what you want to have overwritten*, e.g.,
-
-```js
-module.exports = {
-  devtool: 'inline-source-map',
-};
-```
-
-or specify a function that is called with the already created configuration.
-
-An example would be:
-
-```js
-module.exports = function(config) {
-  config.plugins.push(myAwesomePlugin);
-  config.entry.side = ['@babel/polyfill'];
-  return config;
-};
-```
-
-### Command Line Arguments
-
-Besides the usual `--base` for overriding the base path (otherwise it is the current working directory) the `--config` option exists to override the path to the `webpack.config.js`.
-
-The `debug` commands also contain a `--port` option to set a different port than `1234`.
+For improved config:
+- https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
+- https://github.com/namics/webpack-config-plugins/blob/master/packages/asset-config-webpack-plugin/src/AssetConfigWebpackPlugin.js
 
 ## License
 
-This plugin is released using the MIT license. For more information see the [LICENSE file](LICENSE).
+The code here is released using the MIT license. For more information see the [LICENSE file](LICENSE).

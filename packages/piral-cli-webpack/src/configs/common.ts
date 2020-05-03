@@ -1,60 +1,21 @@
 import chalk from 'chalk';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
-import { RuleSetRule, ProgressPlugin, DefinePlugin, optimize } from 'webpack';
+import { RuleSetRule, ProgressPlugin, optimize } from 'webpack';
 
 export function getEnvironment() {
   const env = process.env.NODE_ENV || 'development';
   const develop = env === 'development';
-  const test = env === 'test';
   const production = env === 'production';
 
   return {
-    env,
     develop,
-    test,
     production,
   };
 }
 
-export function setEnvironment(variables: Record<string, string>) {
-  Object.keys(variables).forEach((key) => (process.env[key] = variables[key]));
-}
-
-export function getDefineVariables(variables: Record<string, string>) {
-  return Object.entries(variables).reduce((obj, [name, value]) => {
-    obj[`process.env.${name}`] = JSON.stringify(value);
-    return obj;
-  }, {});
-}
-
-export function isLocal(path: string) {
-  if (path) {
-    if (path.startsWith(':')) {
-      return false;
-    } else if (path.startsWith('http:')) {
-      return false;
-    } else if (path.startsWith('https:')) {
-      return false;
-    } else if (path.startsWith('data:')) {
-      return false;
-    }
-
-    return true;
-  }
-
-  return false;
-}
-
-export function getPlugins(
-  plugins: Array<any>,
-  progress: boolean,
-  production: boolean,
-  variables: Record<string, string>,
-) {
+export function getPlugins(plugins: Array<any>, progress: boolean, production: boolean) {
   const otherPlugins = [
-    new DefinePlugin(getDefineVariables(variables)),
-
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -103,10 +64,11 @@ export function getStyleLoader() {
 
 export function getRules(baseDir: string): Array<RuleSetRule> {
   const styleLoader = getStyleLoader();
+  const nodeModules = resolve(baseDir, 'node_modules');
 
   return [
     {
-      test: /\.(png|jpe?g|gif|mp4|mp3|svg|ogg|webp|wav)$/i,
+      test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|wav)$/i,
       use: [
         {
           loader: 'file-loader',
@@ -125,29 +87,37 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       use: [styleLoader, 'css-loader'],
     },
     {
-      test: /\.tsx?$/,
-      loaders: [
+      test: /\.m?jsx?$/i,
+      use: [
         {
-          loader: 'awesome-typescript-loader',
+          loader: 'babel-loader',
           options: {
-            tsconfig: resolve(baseDir, 'tsconfig.json'),
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
+      ],
+      exclude: nodeModules,
+    },
+    {
+      test: /\.tsx?$/i,
+      use: [
+        {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
           },
         },
       ],
     },
     {
-      test: /\.codegen$/,
-      use: [
-        {
-          loader: require.resolve('../loaders/codegen'),
-        },
-      ],
+      test: /\.codegen$/i,
+      use: ['parcel-codegen-loader'],
     },
     {
+      test: /\.js$/i,
+      use: ['source-map-loader'],
+      exclude: nodeModules,
       enforce: 'pre',
-      test: /\.js$/,
-      loader: 'source-map-loader',
-      exclude: resolve(baseDir, 'node_modules'),
     },
   ];
 }

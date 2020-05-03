@@ -1,26 +1,25 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
-    "lib": [
-      "es2015",
-      "es2016"
-    ],
-    "sourceMap": true,
-    "outDir": "lib",
     "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "jsx": "react",
+    "noLib": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "moduleResolution": "node",
-    "baseUrl": "."
+    "target": "es5",
+    "sourceMap": true,
+    "lib": ["es6", "dom", "esnext"]
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
-    "node_modules/**/*",
-    "src/**/*.test.ts"
+    "lib",
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "packages/**/node_modules",
+    "packages/**/lib"
   ]
 }
