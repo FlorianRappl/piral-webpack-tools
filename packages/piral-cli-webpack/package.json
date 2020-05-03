@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/FlorianRappl/piral-cli-webpack.git"
   },
+  "engines": {
+    "node": ">= 10"
+  },
   "keywords": [
     "piral-cli",
     "piral",
