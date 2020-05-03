@@ -5,6 +5,11 @@ import { join } from 'path';
 import { getOrMakeAppDir } from './app';
 import { getEnvironment, getRules, getPlugins } from './common';
 
+function getFileName(develop: boolean) {
+  const name = develop ? 'pilet' : 'index';
+  return `${name}.js`;
+}
+
 export async function getPiletConfig(
   baseDir = process.cwd(),
   progress = false,
@@ -16,15 +21,10 @@ export async function getPiletConfig(
   const { develop, test, production } = getEnvironment();
   const piletPkg = require(join(baseDir, 'package.json'));
   const shellPkg = require(join(piletPkg.piral.name, 'package.json'));
-
   const dist = join(baseDir, distDir);
   const src = join(baseDir, srcDir);
   const app = await getOrMakeAppDir(shellPkg, progress);
-
-  function getFileName() {
-    const name = develop ? 'pilet' : 'index';
-    return `${name}.js`;
-  }
+  const fileName = getFileName(develop);
 
   return {
     devtool: develop || test ? 'source-map' : false,
@@ -56,7 +56,7 @@ export async function getPiletConfig(
           res.json({
             name: piletPkg.name,
             version: piletPkg.version,
-            link: `http://localhost:${port}/${getFileName()}`,
+            link: `http://localhost:${port}/${fileName}`,
             hash: '0',
             noCache: true,
             custom: piletPkg.custom,
@@ -67,7 +67,7 @@ export async function getPiletConfig(
 
     output: {
       path: dist,
-      filename: getFileName(),
+      filename: fileName,
     },
 
     resolve: {

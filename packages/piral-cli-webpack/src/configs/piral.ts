@@ -1,33 +1,14 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import { Html5EntryWebpackPlugin } from 'html5-entry-webpack-plugin';
 import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
 import { debugPiletApi, compatVersion } from 'piral-cli/lib/common/info';
-import { load } from 'cheerio';
-import { join, resolve, dirname } from 'path';
-import { readFileSync } from 'fs';
-import { getEnvironment, getRules, isLocal, getPlugins } from './common';
+import { join, resolve } from 'path';
+import { getEnvironment, getRules, getPlugins } from './common';
 
-function extractParts(content: CheerioStatic) {
-  const sheets = content('link[href]')
-    .filter((_, e) => isLocal(e.attribs.href))
-    .remove()
-    .toArray();
-  const scripts = content('script[src]')
-    .filter((_, e) => isLocal(e.attribs.src))
-    .remove()
-    .toArray();
-  const files: Array<string> = [];
-
-  for (const sheet of sheets) {
-    files.push(sheet.attribs.href);
-  }
-
-  for (const script of scripts) {
-    files.push(script.attribs.src);
-  }
-
-  return files;
+function getFileName(develop: boolean) {
+  const name = develop ? 'dev' : 'prod';
+  return `index.${name}.js`;
 }
 
 export async function getPiralConfig(
@@ -38,18 +19,9 @@ export async function getPiralConfig(
   emulator = false,
 ): Promise<webpack.Configuration> {
   const { develop, test, production } = getEnvironment();
-
   const piralPkg = require(join(baseDir, 'package.json'));
   const dist = join(baseDir, distDir);
   const template = resolve(baseDir, piralPkg.app ?? `./src/index.html`);
-  const src = dirname(template);
-  const templateContent = load(readFileSync(template, 'utf8'));
-  const entries = extractParts(templateContent);
-
-  function getFileName() {
-    const name = develop ? 'dev' : 'prod';
-    return `index.${name}.js`;
-  }
 
   return {
     devtool: develop || test ? 'source-map' : false,
@@ -57,7 +29,7 @@ export async function getPiralConfig(
     mode: production ? 'production' : 'development',
 
     entry: {
-      main: entries.map(entry => join(src, entry)),
+      main: [template],
     },
 
     devServer: {
@@ -69,7 +41,7 @@ export async function getPiralConfig(
 
     output: {
       path: dist,
-      filename: getFileName(),
+      filename: getFileName(develop),
     },
 
     resolve: {
@@ -94,9 +66,7 @@ export async function getPiralConfig(
 
     plugins: getPlugins(
       [
-        new HtmlWebpackPlugin({
-          templateContent: templateContent.html(),
-        }),
+        new Html5EntryWebpackPlugin(),
         new PiralInstanceWebpackPlugin(piralPkg, {
           debug: develop && compatVersion,
           emulator: emulator && debugPiletApi,

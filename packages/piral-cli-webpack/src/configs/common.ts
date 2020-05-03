@@ -16,24 +16,6 @@ export function getEnvironment() {
   };
 }
 
-export function isLocal(path: string) {
-  if (path) {
-    if (path.startsWith(':')) {
-      return false;
-    } else if (path.startsWith('http:')) {
-      return false;
-    } else if (path.startsWith('https:')) {
-      return false;
-    } else if (path.startsWith('data:')) {
-      return false;
-    }
-
-    return true;
-  }
-
-  return false;
-}
-
 export function getPlugins(
   plugins: Array<any>,
   progress: boolean,
