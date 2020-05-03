@@ -16,11 +16,7 @@ export function getEnvironment() {
   };
 }
 
-export function getPlugins(
-  plugins: Array<any>,
-  progress: boolean,
-  production: boolean,
-) {
+export function getPlugins(plugins: Array<any>, progress: boolean, production: boolean) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -70,10 +66,11 @@ export function getStyleLoader() {
 
 export function getRules(baseDir: string): Array<RuleSetRule> {
   const styleLoader = getStyleLoader();
+  const nodeModules = resolve(baseDir, 'node_modules');
 
   return [
     {
-      test: /\.(png|jpe?g|gif|mp4|mp3|svg|ogg|webp|wav)$/i,
+      test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|wav)$/i,
       use: [
         {
           loader: 'file-loader',
@@ -92,30 +89,37 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       use: [styleLoader, 'css-loader'],
     },
     {
-      test: /\.tsx?$/,
-      loaders: [
+      test: /\.m?jsx?$/i,
+      use: [
         {
-          loader: 'awesome-typescript-loader',
+          loader: 'babel-loader',
           options: {
-            tsconfig: resolve(baseDir, 'tsconfig.json'),
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
+      ],
+      exclude: nodeModules,
+    },
+    {
+      test: /\.tsx?$/i,
+      use: [
+        {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
           },
         },
       ],
     },
     {
-      test: /\.codegen$/,
-      use: [
-        {
-          loader: 'parcel-codegen-loader',
-          options: {},
-        },
-      ],
+      test: /\.codegen$/i,
+      use: ['parcel-codegen-loader'],
     },
     {
+      test: /\.js$/i,
+      use: ['source-map-loader'],
+      exclude: nodeModules,
       enforce: 'pre',
-      test: /\.js$/,
-      loader: 'source-map-loader',
-      exclude: resolve(baseDir, 'node_modules'),
     },
   ];
 }

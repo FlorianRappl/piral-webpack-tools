@@ -111,7 +111,7 @@ Just make sure to post an issue or reach out to me on [Gitter](https://gitter.im
 [npm-url]: https://npmjs.com/package/piral-instance-webpack-plugin
 [node]: https://img.shields.io/node/v/piral-instance-webpack-plugin.svg
 [node-url]: https://nodejs.org
-[chat]: https://img.shields.io/badge/gitter-piral-io%2Fcommunity-brightgreen.svg
+[chat]: https://img.shields.io/badge/gitter-piral.io%2Fcommunity-brightgreen.svg
 [chat-url]: https://gitter.im/piral-io/community
 [size]: https://packagephobia.now.sh/badge?p=piral-instance-webpack-plugin
 [size-url]: https://packagephobia.now.sh/result?p=piral-instance-webpack-plugin
