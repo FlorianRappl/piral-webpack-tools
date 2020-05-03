@@ -27,7 +27,7 @@ export async function getPiletConfig(
   const fileName = getFileName(develop);
 
   return {
-    devtool: 'source-map',
+    devtool: develop ? 'cheap-module-eval-source-map' : 'source-map',
 
     mode: production ? 'production' : 'development',
 
