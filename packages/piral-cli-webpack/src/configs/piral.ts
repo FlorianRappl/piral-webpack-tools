@@ -18,13 +18,13 @@ export async function getPiralConfig(
   distDir = 'dist',
   emulator = false,
 ): Promise<webpack.Configuration> {
-  const { develop, test, production } = getEnvironment();
+  const { develop, production } = getEnvironment();
   const piralPkg = require(join(baseDir, 'package.json'));
   const dist = join(baseDir, distDir);
   const template = resolve(baseDir, piralPkg.app ?? `./src/index.html`);
 
   return {
-    devtool: develop || test ? 'source-map' : false,
+    devtool: 'source-map',
 
     mode: production ? 'production' : 'development',
 

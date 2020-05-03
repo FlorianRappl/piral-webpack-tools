@@ -18,7 +18,7 @@ export async function getPiletConfig(
   srcDir = 'src',
   entryFile = 'index',
 ): Promise<webpack.Configuration> {
-  const { develop, test, production } = getEnvironment();
+  const { develop, production } = getEnvironment();
   const piletPkg = require(join(baseDir, 'package.json'));
   const shellPkg = require(join(piletPkg.piral.name, 'package.json'));
   const dist = join(baseDir, distDir);
@@ -27,7 +27,7 @@ export async function getPiletConfig(
   const fileName = getFileName(develop);
 
   return {
-    devtool: develop || test ? 'source-map' : false,
+    devtool: 'source-map',
 
     mode: production ? 'production' : 'development',
 
