@@ -1,3 +1,10 @@
+[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+
+[![npm][npm]][npm-url]
+[![node][node]][node-url]
+[![chat][chat]][chat-url]
+[![size][size]][size-url]
+
 # piral-cli-webpack
 
 Plugin for the `piral-cli`. Adds command line options to debug or build using webpack.
@@ -108,3 +115,12 @@ Just make sure to post an issue or reach out to me on [Gitter](https://gitter.im
 ## License
 
 This plugin is released using the MIT license.
+
+[npm]: https://img.shields.io/npm/v/piral-cli-webpack.svg
+[npm-url]: https://npmjs.com/package/piral-cli-webpack
+[node]: https://img.shields.io/node/v/piral-cli-webpack.svg
+[node-url]: https://nodejs.org
+[chat]: https://img.shields.io/badge/gitter-piral.io%2Fcommunity-brightgreen.svg
+[chat-url]: https://gitter.im/piral-io/community
+[size]: https://packagephobia.now.sh/badge?p=piral-cli-webpack
+[size-url]: https://packagephobia.now.sh/result?p=piral-cli-webpack
