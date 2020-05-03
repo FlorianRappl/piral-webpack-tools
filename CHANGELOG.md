@@ -3,7 +3,8 @@
 ## 0.5.0 (tbd)
 
 * Changed to use mono repo (#5)
-* Added new `codegen-loader`
+* Added new `parcel-codegen-loader`
+* Added new `html5-entry-webpack-plugin`
 * Added new `pilet-webpack-plugin`
 * Added new `piral-instance-webpack-plugin`
 
