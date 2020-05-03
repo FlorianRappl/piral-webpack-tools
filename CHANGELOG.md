@@ -1,6 +1,6 @@
 # Piral Webpack Tools Changelog
 
-## 0.5.0 (tbd)
+## 0.5.0 (May 3, 2020)
 
 * Changed to use mono repo (#5)
 * Added new `parcel-codegen-loader`
