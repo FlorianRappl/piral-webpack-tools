@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { Plugin, Compiler, BannerPlugin, DefinePlugin } from 'webpack';
 import { wrapPilet, setEnvironment, getDefineVariables, getVariables } from './helpers';
 
@@ -39,7 +40,16 @@ export class PiletWebpackPlugin implements Plugin {
 
     compiler.hooks.done.tap(pluginName, statsData => {
       if (!statsData.hasErrors()) {
-        wrapPilet(compiler.outputPath, jsonpFunction);
+        const { path, filename } = compiler.options.output;
+
+        if (typeof filename === 'string') {
+          const file = resolve(path, filename);
+          wrapPilet(file, jsonpFunction);
+        } else {
+          const [main] = statsData.compilation.chunks.filter(m => m.entryModule).map(m => m.files[0]);
+          const file = resolve(compiler.outputPath, main);
+          wrapPilet(file, jsonpFunction);
+        }
       }
     });
 
