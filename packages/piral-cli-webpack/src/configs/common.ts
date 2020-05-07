@@ -68,7 +68,7 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
 
   return [
     {
-      test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|wav)$/i,
+      test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|woff2?|eot|ttf|wav)$/i,
       use: [
         {
           loader: 'file-loader',
