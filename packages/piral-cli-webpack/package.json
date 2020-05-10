@@ -1,7 +1,7 @@
 {
   "name": "piral-cli-webpack",
   "version": "0.5.0",
-  "description": "Integrates webpack into the Piral CLI for debugging and building pilets.",
+  "description": "Provides debug and build capabilities for pilets and Piral instances using Webpack.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
@@ -20,7 +20,9 @@
     "piral",
     "plugin",
     "webpack",
-    "command"
+    "build",
+    "debug",
+    "bundle"
   ],
   "author": "Florian Rappl <mail@florian-rappl.de>",
   "license": "MIT",
