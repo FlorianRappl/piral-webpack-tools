@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { Configuration } from 'webpack';
 
-export function extendConfig(webPackConfig: Configuration, otherConfigPath: string) {
+export function extendConfig(webPackConfig: Configuration, otherConfigPath: string): Configuration {
   if (existsSync(otherConfigPath)) {
     const otherConfig = require(otherConfigPath);
 

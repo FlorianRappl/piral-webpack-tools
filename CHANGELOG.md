@@ -1,6 +1,6 @@
 # Piral Webpack Tools Changelog
 
-## 0.5.1 (May 10, 2020)
+## 0.5.1 (May 11, 2020)
 
 * Improved supported file types (#14)
 * Support watch for shell in mono repos (#12)
