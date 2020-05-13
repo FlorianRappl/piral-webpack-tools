@@ -5,7 +5,7 @@ export function wrapPilet(file: string, prName: string) {
     const template = readFileSync(file, 'utf8');
     const content = template.replace(
       /^\!function\s?\(e,\s?t\)\s?\{/m,
-      `!function(e,t){function define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(d.map(window.${prName})));}define.amd=!0;`,
+      `!function(e,t){function define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${prName})));}define.amd=!0;`,
     );
 
     writeFileSync(file, content);
