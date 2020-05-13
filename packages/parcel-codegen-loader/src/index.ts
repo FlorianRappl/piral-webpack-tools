@@ -1,5 +1,6 @@
 import * as validateOptions from 'schema-utils';
 import { getOptions } from 'loader-utils';
+import { Compiler } from 'webpack';
 
 const schema = {
   type: 'object',
@@ -12,6 +13,10 @@ function reloadGenerator(name: string) {
   return require(name);
 }
 
+export interface DependencyOptions {
+  includedInParent?: boolean;
+}
+
 export default async function loader(source: string, map: string, meta: any) {
   const options = getOptions(this);
 
@@ -21,9 +26,17 @@ export default async function loader(source: string, map: string, meta: any) {
   });
 
   const name = this.resourcePath;
+  const compiler = this._compiler as Compiler;
   const callback = this.async();
   const generator = reloadGenerator(name);
-  const content = await generator.call(this);
+  const content = await generator.call({
+    name,
+    options: {
+      outDir: compiler?.options?.output?.path,
+      rootDir: process.cwd(),
+    },
+    addDependency: (file: string, options: DependencyOptions = {}) => this.addDependency(file),
+  });
 
   if (typeof content === 'string') {
     callback(null, content, map, meta);
