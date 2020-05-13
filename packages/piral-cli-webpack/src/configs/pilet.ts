@@ -32,7 +32,7 @@ export async function getPiletConfig(
     mode: production ? 'production' : 'development',
 
     entry: {
-      main: [join(src, entryFile)],
+      main: [join(__dirname, '..', 'set-path'), join(src, entryFile)],
     },
 
     devServer: {
