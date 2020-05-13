@@ -1,5 +1,11 @@
 # Piral Webpack Tools Changelog
 
+## 0.5.2 (May 13, 2020)
+
+* Fixed bug in definition of pilet
+* Fixed asset paths for pilets
+* Aligned API of `parcel-codegen-loader`
+
 ## 0.5.1 (May 11, 2020)
 
 * Improved supported file types (#14)
