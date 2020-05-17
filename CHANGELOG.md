@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.5.3 (May 17, 2020)
+
+* Fixed bug for lazy loading in pilets
+* Improved `piral debug-wp` with public path
+
 ## 0.5.2 (May 13, 2020)
 
 * Fixed bug in definition of pilet

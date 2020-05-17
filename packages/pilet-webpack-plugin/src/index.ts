@@ -55,7 +55,7 @@ export class PiletWebpackPlugin implements Plugin {
 
     compiler.hooks.afterEnvironment.tap(pluginName, () => {
       const current = compiler.options.externals;
-      compiler.options.output.jsonpFunction = jsonpFunction;
+      compiler.options.output.jsonpFunction = `${jsonpFunction}_chunks`;
       compiler.options.output.libraryTarget = 'umd';
       compiler.options.output.library = piletPkg.name;
       compiler.options.externals = Array.isArray(current)

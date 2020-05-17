@@ -40,6 +40,7 @@ export async function getPiralConfig(
     },
 
     output: {
+      publicPath: '/',
       path: dist,
       filename: getFileName(develop),
     },
