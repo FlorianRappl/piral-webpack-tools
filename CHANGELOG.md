@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.5.4 (June 8, 2020)
+
+* Updated dependences (#17)
+* Changed to use flexible (relative) pilet URL (#18)
+
 ## 0.5.3 (May 17, 2020)
 
 * Fixed bug for lazy loading in pilets
