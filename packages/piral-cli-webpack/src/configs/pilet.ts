@@ -56,7 +56,7 @@ export async function getPiletConfig(
           res.json({
             name: piletPkg.name,
             version: piletPkg.version,
-            link: `http://localhost:${port}/${fileName}`,
+            link: `/${fileName}`,
             hash: '0',
             noCache: true,
             custom: piletPkg.custom,
