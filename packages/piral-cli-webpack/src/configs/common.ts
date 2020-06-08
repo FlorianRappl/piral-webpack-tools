@@ -78,6 +78,7 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       ),
     ];
   };
+  // In Monorepo mode, failed to accurately match the real node_modules directory
   const nodeModules = generateExcludes(['fbjs']);
 
   return [
@@ -125,6 +126,7 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
                 },
               ],
               '@babel/preset-react',
+              // When ts-loader is used with `@babel/plugin-transform-runtime`, it fails to convert jsx well, for example: arrow function is not converted, so it is replaced with `@babel/preset-typescript`.
               '@babel/preset-typescript',
             ],
             plugins: [
