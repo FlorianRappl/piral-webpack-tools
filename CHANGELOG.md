@@ -1,5 +1,9 @@
 # Piral Webpack Tools Changelog
 
+## 0.5.5 (June 9, 2020)
+
+* Support IE11 (#20)
+
 ## 0.5.4 (June 8, 2020)
 
 * Updated dependences (#17)
