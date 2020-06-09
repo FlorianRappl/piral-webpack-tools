@@ -24,7 +24,7 @@ export async function getPiralConfig(
   const template = resolve(baseDir, piralPkg.app ?? `./src/index.html`);
 
   return {
-    devtool: develop ? 'cheap-module-eval-source-map' : 'source-map',
+    devtool: develop ? 'cheap-module-source-map' : 'source-map',
 
     mode: production ? 'production' : 'development',
 

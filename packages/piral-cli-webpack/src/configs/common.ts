@@ -62,9 +62,29 @@ export function getStyleLoader() {
   return process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader;
 }
 
+const pathDelimiter = '[\\\\/]'; // match 2 antislashes or one slash
+
+function safePath(moduleName: string) {
+  return moduleName.split('/').join(pathDelimiter);
+}
+
+function generateExcludes(modules: Array<string>) {
+  /**
+   * On Windows, the Regex won't match as Webpack tries to resolve the
+   * paths of the modules. So we need to check for \\ and /
+   */
+  return [
+    new RegExp(
+      `node_modules${pathDelimiter}(?!(${modules.map(safePath).join('|')})(${pathDelimiter}|$)(?!.*node_modules))`,
+    ),
+  ];
+}
+
 export function getRules(baseDir: string): Array<RuleSetRule> {
   const styleLoader = getStyleLoader();
-  const nodeModules = resolve(baseDir, 'node_modules');
+
+  // In Monorepo mode, failed to accurately match the real node_modules directory
+  const nodeModules = generateExcludes(['fbjs']);
 
   return [
     {
@@ -87,12 +107,44 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
       use: [styleLoader, 'css-loader'],
     },
     {
-      test: /\.m?jsx?$/i,
+      test: /\.m?[jt]sx?$/i,
       use: [
         {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  targets: {
+                    esmodules: false,
+                  },
+                  modules: false,
+                  debug: true,
+                  include: [],
+                  exclude: [],
+                  useBuiltIns: false,
+                  forceAllTransforms: false,
+                  shippedProposals: false,
+                },
+              ],
+              '@babel/preset-react',
+            ],
+            plugins: [
+              [
+                '@babel/plugin-transform-runtime',
+                {
+                  corejs: 3,
+                  helpers: true,
+                  regenerator: true,
+                  useESModules: false,
+                },
+              ],
+              '@babel/plugin-proposal-object-rest-spread',
+              '@babel/plugin-transform-modules-commonjs',
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+              ['@babel/plugin-proposal-class-properties', { loose: true }],
+            ],
           },
         },
       ],
