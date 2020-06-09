@@ -62,22 +62,27 @@ export function getStyleLoader() {
   return process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader;
 }
 
-export function getRules(baseDir: string): Array<RuleSetRule> {
-  const styleLoader = getStyleLoader();
+const pathDelimiter = '[\\\\/]'; // match 2 antislashes or one slash
 
-  const pathDelimiter = '[\\\\/]'; // match 2 antislashes or one slash
+function safePath(moduleName: string) {
+  return moduleName.split('/').join(pathDelimiter);
+}
+
+function generateExcludes(modules: Array<string>) {
   /**
    * On Windows, the Regex won't match as Webpack tries to resolve the
    * paths of the modules. So we need to check for \\ and /
    */
-  const safePath = (module) => module.split('/').join(pathDelimiter);
-  const generateExcludes = (modules) => {
-    return [
-      new RegExp(
-        `node_modules${pathDelimiter}(?!(${modules.map(safePath).join('|')})(${pathDelimiter}|$)(?!.*node_modules))`,
-      ),
-    ];
-  };
+  return [
+    new RegExp(
+      `node_modules${pathDelimiter}(?!(${modules.map(safePath).join('|')})(${pathDelimiter}|$)(?!.*node_modules))`,
+    ),
+  ];
+}
+
+export function getRules(baseDir: string): Array<RuleSetRule> {
+  const styleLoader = getStyleLoader();
+
   // In Monorepo mode, failed to accurately match the real node_modules directory
   const nodeModules = generateExcludes(['fbjs']);
 
