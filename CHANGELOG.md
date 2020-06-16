@@ -1,5 +1,12 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.0 (tbd)
+
+* Moved `piral-cli-webpack` to the Piral repository
+* The new `piral-cli-webpack` is compatible `piral-cli` v0.11.6 onwards
+* Improved the API of `pilet-webpack-plugin` (breaking)
+* Improved the API of `piral-instance-webpack-plugin` (breaking)
+
 ## 0.5.5 (June 9, 2020)
 
 * Support IE11 (#20)

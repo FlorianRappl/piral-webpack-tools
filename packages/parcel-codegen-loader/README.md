@@ -19,8 +19,8 @@ It follows pretty much the [parcel-plugin-codegen](https://www.npmjs.com/package
 
 To begin, you'll need to install `parcel-codegen-loader`:
 
-```console
-$ npm install parcel-codegen-loader --save-dev
+```sh
+npm install parcel-codegen-loader --save-dev
 ```
 
 Import (or `require`) the target file(s) in one of the bundle's files:

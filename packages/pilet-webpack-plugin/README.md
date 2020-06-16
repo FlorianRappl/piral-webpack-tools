@@ -17,8 +17,8 @@ The `pilet-webpack-plugin` helps you to build pilets using Webpack.
 
 To begin, you'll need to install `pilet-webpack-plugin`:
 
-```console
-$ npm install pilet-webpack-plugin --save-dev
+```sh
+npm install pilet-webpack-plugin --save-dev
 ```
 
 Then add the plugin to your `webpack` config. For example:
@@ -30,7 +30,13 @@ const { PiletWebpackPlugin } = require('pilet-webpack-plugin');
 const piletPkg = require('./package.json');
 
 module.exports = {
-  plugins: [new PiletWebpackPlugin(piletPkg)],
+  plugins: [
+    new PiletWebpackPlugin({
+      name: piletPkg.name,
+      version: piletPkg.version,
+      piral: piletPkg.piral.name,
+    }),
+  ],
 };
 ```
 
@@ -50,7 +56,10 @@ const piletPkg = require('./package.json');
 
 module.exports = {
   plugins: [
-    new PiletWebpackPlugin(piletPkg, {
+    new PiletWebpackPlugin({
+      name: piletPkg.name,
+      version: piletPkg.version,
+      piral: piletPkg.piral.name,
       variables: {
         PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
       },

@@ -1,33 +1,69 @@
-import { resolve } from 'path';
 import { Plugin, Compiler, BannerPlugin, DefinePlugin } from 'webpack';
-import { wrapPilet, setEnvironment, getDefineVariables, getVariables } from './helpers';
+import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 
 const pluginName = 'PiletWebpackPlugin';
 
 export interface PiletWebpackPluginOptions {
+  /**
+   * The name of the pilet.
+   */
+  name: string;
+  /**
+   * The version of the pilet.
+   */
+  version: string;
+  /**
+   * The name of the Piral instance / app shell.
+   */
+  piral: string;
+  /**
+   * The schema version. By default, v1 is used.
+   */
+  schema?: 'v0' | 'v1';
+  /**
+   * The shared dependencies. By default, these are read from the
+   * Piral instance.
+   */
+  externals?: Array<string>;
+  /**
+   * Additional environment variables to define.
+   */
   variables?: Record<string, string>;
 }
 
+function getExternals(piral: string) {
+  const shellPkg = require(`${piral}/package.json`);
+  const piralExternals = shellPkg.pilets?.externals ?? [];
+  return [
+    ...piralExternals,
+    '@dbeining/react-atom',
+    '@libre/atom',
+    'history',
+    'react',
+    'react-dom',
+    'react-router',
+    'react-router-dom',
+    'tslib',
+    'path-to-regexp',
+  ];
+}
+
 export class PiletWebpackPlugin implements Plugin {
-  constructor(private piletPackage: any, private options: PiletWebpackPluginOptions = {}) {}
+  constructor(private options: PiletWebpackPluginOptions) {}
 
   apply(compiler: Compiler) {
-    const piletPkg = this.piletPackage;
-    const shellPkg = require(`${piletPkg.piral.name}/package.json`);
-    const shortName = piletPkg.name.replace(/\W/gi, '');
-    const jsonpFunction = `pr_${shortName}`;
     const environment = process.env.NODE_ENV || 'development';
-    const piralExternals = shellPkg.pilets?.externals ?? [];
-    const piletExternals = piletPkg.externals ?? [];
-    const peerDependencies = Object.keys(piletPkg.peerDependencies ?? {});
-    const externals = [...piralExternals, ...piletExternals, ...peerDependencies];
+    const { name, version, piral, externals = getExternals(piral), schema } = this.options;
+    const shortName = name.replace(/\W/gi, '');
+    const jsonpFunction = `pr_${shortName}`;
+    const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
     const variables = {
-      ...getVariables(piletPkg, environment),
+      ...getVariables(name, version, environment),
       ...this.options.variables,
     };
     const plugins = [
       new BannerPlugin({
-        banner: `//@pilet v:1(${jsonpFunction})`,
+        banner: `//@pilet v:${bannerSuffix}`,
         entryOnly: true,
         raw: true,
       }),
@@ -38,26 +74,18 @@ export class PiletWebpackPlugin implements Plugin {
 
     plugins.forEach(plugin => plugin.apply(compiler));
 
-    compiler.hooks.done.tap(pluginName, statsData => {
-      if (!statsData.hasErrors()) {
-        const { path, filename } = compiler.options.output;
-
-        if (typeof filename === 'string') {
-          const file = resolve(path, filename);
-          wrapPilet(file, jsonpFunction);
-        } else {
-          const [main] = statsData.compilation.chunks.filter(m => m.entryModule).map(m => m.files[0]);
-          const file = resolve(compiler.outputPath, main);
-          wrapPilet(file, jsonpFunction);
-        }
-      }
-    });
-
     compiler.hooks.afterEnvironment.tap(pluginName, () => {
       const current = compiler.options.externals;
       compiler.options.output.jsonpFunction = `${jsonpFunction}_chunks`;
       compiler.options.output.libraryTarget = 'umd';
-      compiler.options.output.library = piletPkg.name;
+      compiler.options.output.library = name;
+
+      if (schema === 'v1') {
+        compiler.options.output.auxiliaryComment = {
+          commonjs2: `\nfunction define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
+        } as any;
+      }
+
       compiler.options.externals = Array.isArray(current)
         ? [...current, ...externals]
         : current

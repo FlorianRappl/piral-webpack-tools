@@ -17,8 +17,8 @@ The `piral-instance-webpack-plugin` helps you to build Piral instances using Web
 
 To begin, you'll need to install `piral-instance-webpack-plugin`:
 
-```console
-$ npm install piral-instance-webpack-plugin --save-dev
+```sh
+npm install piral-instance-webpack-plugin --save-dev
 ```
 
 Then add the plugin to your `webpack` config. For example:
@@ -29,8 +29,18 @@ Then add the plugin to your `webpack` config. For example:
 const { PiralInstanceWebpackPlugin } = require('piral-instance-webpack-plugin');
 const piralPkg = require('./package.json');
 
+const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
+const dependencies = piralPkg.pilets?.externals ?? [];
+const externals = dependencies.filter((m) => !excludedDependencies.includes(m));
+
 module.exports = {
-  plugins: [new PiralInstanceWebpackPlugin(piralPkg)],
+  plugins: [
+    new PiralInstanceWebpackPlugin({
+      name: piralPkg.name,
+      version: piralPkg.version,
+      externals,
+    }),
+  ],
 };
 ```
 
@@ -48,9 +58,16 @@ Example:
 const { PiralInstanceWebpackPlugin } = require('piral-instance-webpack-plugin');
 const piralPkg = require('./package.json');
 
+const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
+const dependencies = piralPkg.pilets?.externals ?? [];
+const externals = dependencies.filter((m) => !excludedDependencies.includes(m));
+
 module.exports = {
   plugins: [
-    new PiralInstanceWebpackPlugin(piralPkg, {
+    new PiralInstanceWebpackPlugin({
+      name: piralPkg.name,
+      version: piralPkg.version,
+      externals,
       variables: {
         PIRAL_CLI_VERSION: require('piral-cli/package.json').version,
       },
@@ -69,9 +86,16 @@ Example:
 const { PiralInstanceWebpackPlugin } = require('piral-instance-webpack-plugin');
 const piralPkg = require('./package.json');
 
+const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
+const dependencies = piralPkg.pilets?.externals ?? [];
+const externals = dependencies.filter((m) => !excludedDependencies.includes(m));
+
 module.exports = {
   plugins: [
-    new PiralInstanceWebpackPlugin(piralPkg, {
+    new PiralInstanceWebpackPlugin({
+      name: piralPkg.name,
+      version: piralPkg.version,
+      externals,
       debug: true,
     }),
   ],
@@ -88,9 +112,16 @@ Example:
 const { PiralInstanceWebpackPlugin } = require('piral-instance-webpack-plugin');
 const piralPkg = require('./package.json');
 
+const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
+const dependencies = piralPkg.pilets?.externals ?? [];
+const externals = dependencies.filter((m) => !excludedDependencies.includes(m));
+
 module.exports = {
   plugins: [
-    new PiralInstanceWebpackPlugin(piralPkg, {
+    new PiralInstanceWebpackPlugin({
+      name: piralPkg.name,
+      version: piralPkg.version,
+      externals,
       emulator: '/$pilet-api',
     }),
   ],

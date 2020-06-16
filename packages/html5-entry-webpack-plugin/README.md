@@ -17,8 +17,8 @@ The `html5-entry-webpack-plugin` allows using an HTML file as an entry module. I
 
 To begin, you'll need to install `html5-entry-webpack-plugin`:
 
-```console
-$ npm install html5-entry-webpack-plugin --save-dev
+```sh
+npm install html5-entry-webpack-plugin --save-dev
 ```
 
 Use an HTML file with all the necessary references:

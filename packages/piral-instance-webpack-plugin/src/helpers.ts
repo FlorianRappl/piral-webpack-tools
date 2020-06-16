@@ -1,19 +1,21 @@
-export function getVariables(piralPkg: any, env: string): Record<string, string> {
-  const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
-  const dependencies = piralPkg.pilets?.externals ?? [];
-
+export function getVariables(
+  name: string,
+  version: string,
+  externals: Array<string>,
+  env: string,
+): Record<string, string> {
   return {
     NODE_ENV: env,
     BUILD_TIME: new Date().toDateString(),
     BUILD_TIME_FULL: new Date().toISOString(),
-    BUILD_PCKG_VERSION: piralPkg.version,
-    BUILD_PCKG_NAME: piralPkg.name,
-    SHARED_DEPENDENCIES: dependencies.filter((m) => !excludedDependencies.includes(m)).join(','),
+    BUILD_PCKG_VERSION: version,
+    BUILD_PCKG_NAME: name,
+    SHARED_DEPENDENCIES: externals.join(','),
   };
 }
 
 export function setEnvironment(variables: Record<string, string>) {
-  Object.keys(variables).forEach((key) => (process.env[key] = variables[key]));
+  Object.keys(variables).forEach(key => (process.env[key] = variables[key]));
 }
 
 export function getDefineVariables(variables: Record<string, string>) {

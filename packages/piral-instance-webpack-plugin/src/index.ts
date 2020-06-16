@@ -4,20 +4,22 @@ import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 const pluginName = 'PiralInstanceWebpackPlugin';
 
 export interface PiralInstanceWebpackPluginOptions {
+  name: string;
+  version: string;
+  externals: Array<string>;
   variables?: Record<string, string>;
   debug?: boolean | string;
   emulator?: boolean | string;
 }
 
 export class PiralInstanceWebpackPlugin implements Plugin {
-  constructor(private piralPackage: any, private options: PiralInstanceWebpackPluginOptions = {}) {}
+  constructor(private options: PiralInstanceWebpackPluginOptions) {}
 
   apply(compiler: Compiler) {
-    const piralPkg = this.piralPackage;
-    const { debug, emulator } = this.options;
+    const { name, version, debug, emulator, externals } = this.options;
     const environment = process.env.NODE_ENV || 'development';
     const variables = {
-      ...getVariables(piralPkg, environment),
+      ...getVariables(name, version, externals, environment),
       ...this.options.variables,
     };
 

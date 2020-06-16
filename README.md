@@ -8,13 +8,19 @@ This repository contains the packages used to enable Webpack support in Piral. W
 
 ## Options
 
-The easiest option is to use the `piral-cli` and install another dev dependency `pilet-webpack-plugin`.
+### Using the Piral CLI
+
+The easiest option is to use the `piral-cli` and install another dev dependency `piral-cli-webpack`.
 
 ```sh
-npm i pilet-webpack-plugin --save-dev
+npm i piral-cli-webpack --save-dev
 ```
 
-Now new commands such as `piral build-wp` or `pilet build-wp` can be used. For details, see the [plugin's README](./packages/pilet-webpack-plugin/README.md).
+The existing build, debug, and publish commands will now just work with Webpack.
+
+For details, see the [plugin's README](./packages/pilet-webpack-plugin/README.md).
+
+### Using Webpack Directly
 
 If you want to fully configure Webpack yourself you can just leverage either
 
@@ -31,16 +37,6 @@ npm i pilet-webpack-plugin --save-dev
 for pilets.
 
 There are also standalone plugins for things such as support for `.codegen` files or using HTML as an entry module in Webpack.
-
-## Further Reading
-
-For development:
-- https://github.com/adierkens/webpack-inject-plugin/blob/master/src/main.ts
-- https://webpack.js.org/contribute/plugin-patterns/
-
-For improved config:
-- https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
-- https://github.com/namics/webpack-config-plugins/blob/master/packages/asset-config-webpack-plugin/src/AssetConfigWebpackPlugin.js
 
 ## License
 
