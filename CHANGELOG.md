@@ -1,6 +1,10 @@
 # Piral Webpack Tools Changelog
 
-## 0.6.0 (tbd)
+## 0.6.1 (June 29, 2020)
+
+* Allow `none` schema in `pilet-webpack-plugin`
+
+## 0.6.0 (June 16, 2020)
 
 * Moved `piral-cli-webpack` to the Piral repository
 * The new `piral-cli-webpack` is compatible `piral-cli` v0.11.6 onwards

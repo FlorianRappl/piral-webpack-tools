@@ -19,7 +19,7 @@ export interface PiletWebpackPluginOptions {
   /**
    * The schema version. By default, v1 is used.
    */
-  schema?: 'v0' | 'v1';
+  schema?: 'v0' | 'v1' | 'none';
   /**
    * The shared dependencies. By default, these are read from the
    * Piral instance.
@@ -49,26 +49,32 @@ function getExternals(piral: string) {
 }
 
 export class PiletWebpackPlugin implements Plugin {
-  constructor(private options: PiletWebpackPluginOptions) {}
+  constructor(private options: PiletWebpackPluginOptions) { }
 
   apply(compiler: Compiler) {
     const environment = process.env.NODE_ENV || 'development';
     const { name, version, piral, externals = getExternals(piral), schema } = this.options;
     const shortName = name.replace(/\W/gi, '');
     const jsonpFunction = `pr_${shortName}`;
-    const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
     const variables = {
       ...getVariables(name, version, environment),
       ...this.options.variables,
     };
     const plugins = [
-      new BannerPlugin({
-        banner: `//@pilet v:${bannerSuffix}`,
-        entryOnly: true,
-        raw: true,
-      }),
       new DefinePlugin(getDefineVariables(variables)),
     ];
+
+    if (schema !== 'none') {
+      const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
+
+      plugins.push(
+        new BannerPlugin({
+          banner: `//@pilet v:${bannerSuffix}`,
+          entryOnly: true,
+          raw: true,
+        }),
+      );
+    }
 
     setEnvironment(variables);
 
@@ -77,8 +83,11 @@ export class PiletWebpackPlugin implements Plugin {
     compiler.hooks.afterEnvironment.tap(pluginName, () => {
       const current = compiler.options.externals;
       compiler.options.output.jsonpFunction = `${jsonpFunction}_chunks`;
-      compiler.options.output.libraryTarget = 'umd';
       compiler.options.output.library = name;
+
+      if (schema !== 'none') {
+        compiler.options.output.libraryTarget = 'umd';
+      }
 
       if (schema === 'v1') {
         compiler.options.output.auxiliaryComment = {
@@ -89,8 +98,8 @@ export class PiletWebpackPlugin implements Plugin {
       compiler.options.externals = Array.isArray(current)
         ? [...current, ...externals]
         : current
-        ? [current, ...externals]
-        : externals;
+          ? [current, ...externals]
+          : externals;
     });
   }
 }
