@@ -71,6 +71,7 @@ export class PiletWebpackPlugin implements Plugin {
         new BannerPlugin({
           banner: `//@pilet v:${bannerSuffix}`,
           entryOnly: true,
+          include: /\.js$/,
           raw: true,
         }),
       );

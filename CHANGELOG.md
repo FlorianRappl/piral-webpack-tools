@@ -1,5 +1,9 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.2 (July 31, 2020)
+
+* Exclude CSS from pilet banner
+
 ## 0.6.1 (June 29, 2020)
 
 * Allow `none` schema in `pilet-webpack-plugin`
