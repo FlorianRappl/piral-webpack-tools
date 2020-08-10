@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.3 (August 10, 2020)
+
+* Improved lazy loading for pilet debug
+* Updated dependencies
+
 ## 0.6.2 (July 31, 2020)
 
 * Exclude CSS from pilet banner
@@ -21,7 +26,7 @@
 
 ## 0.5.4 (June 8, 2020)
 
-* Updated dependences (#17)
+* Updated dependencies (#17)
 * Changed to use flexible (relative) pilet URL (#18)
 
 ## 0.5.3 (May 17, 2020)

@@ -91,8 +91,9 @@ export class PiletWebpackPlugin implements Plugin {
       }
 
       if (schema === 'v1') {
+        const reset = environment !== 'production' ? `delete ${jsonpFunction}_chunks;` : '';
         compiler.options.output.auxiliaryComment = {
-          commonjs2: `\nfunction define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
+          commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
         } as any;
       }
 

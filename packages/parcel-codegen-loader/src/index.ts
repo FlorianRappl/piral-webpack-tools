@@ -3,7 +3,7 @@ import { getOptions } from 'loader-utils';
 import { Compiler } from 'webpack';
 
 const schema = {
-  type: 'object',
+  type: 'object' as const,
   properties: {},
   additionalProperties: false,
 };
