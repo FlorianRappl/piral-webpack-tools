@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.4 (September 7, 2020)
+
+* Published `import-maps-webpack-plugin`
+* Expose `html-webpack-plugin` options in `html5-entry-webpack-plugin`
+
 ## 0.6.3 (August 10, 2020)
 
 * Improved lazy loading for pilet debug

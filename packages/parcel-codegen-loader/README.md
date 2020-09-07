@@ -107,11 +107,11 @@ Just make sure to post an issue or reach out to me on [Gitter](https://gitter.im
 
 This plugin is released using the MIT license.
 
-[npm]: https://img.shields.io/npm/v/codegen-loader.svg
-[npm-url]: https://npmjs.com/package/codegen-loader
-[node]: https://img.shields.io/node/v/codegen-loader.svg
+[npm]: https://img.shields.io/npm/v/parcel-codegen-loader.svg
+[npm-url]: https://npmjs.com/package/parcel-codegen-loader
+[node]: https://img.shields.io/node/v/parcel-codegen-loader.svg
 [node-url]: https://nodejs.org
 [chat]: https://img.shields.io/badge/gitter-piral.io%2Fcommunity-brightgreen.svg
 [chat-url]: https://gitter.im/piral-io/community
-[size]: https://packagephobia.now.sh/badge?p=codegen-loader
-[size-url]: https://packagephobia.now.sh/result?p=codegen-loader
+[size]: https://packagephobia.now.sh/badge?p=parcel-codegen-loader
+[size-url]: https://packagephobia.now.sh/result?p=parcel-codegen-loader

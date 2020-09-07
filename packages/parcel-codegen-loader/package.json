@@ -1,6 +1,6 @@
 {
   "name": "parcel-codegen-loader",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "A loader for .codegen files to auto-generate modules on the fly.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FlorianRappl/piral-cli-webpack.git"
+    "url": "git+https://github.com/FlorianRappl/piral-webpack-tools.git"
   },
   "engines": {
     "node": ">= 8"
@@ -23,9 +23,9 @@
   "author": "Florian Rappl <mail@florian-rappl.de>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/FlorianRappl/piral-cli-webpack/issues"
+    "url": "https://github.com/FlorianRappl/piral-webpack-tools/issues"
   },
-  "homepage": "https://github.com/FlorianRappl/piral-cli-webpack#readme",
+  "homepage": "https://github.com/FlorianRappl/piral-webpack-tools#readme",
   "peerDependencies": {
     "webpack": "^4.0.0 || ^5.0.0"
   },

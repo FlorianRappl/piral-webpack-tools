@@ -1,7 +1,7 @@
 {
-  "name": "piral-instance-webpack-plugin",
+  "name": "import-maps-webpack-plugin",
   "version": "0.6.4",
-  "description": "Webpack plugin for generating a valid Piral instance bundle.",
+  "description": "A plugin for providing static import maps support to Webpack.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
@@ -16,11 +16,11 @@
     "node": ">= 8"
   },
   "keywords": [
-    "piral-cli",
-    "piral",
-    "plugin",
+    "import-maps",
+    "importmap",
+    "imports",
     "webpack",
-    "command"
+    "plugin"
   ],
   "author": "Florian Rappl <mail@florian-rappl.de>",
   "license": "MIT",
@@ -28,8 +28,14 @@
     "url": "https://github.com/FlorianRappl/piral-webpack-tools/issues"
   },
   "homepage": "https://github.com/FlorianRappl/piral-webpack-tools#readme",
+  "peerDependencies": {
+    "webpack": "^4.0.0 || ^5.0.0"
+  },
   "devDependencies": {
+    "@types/webpack-virtual-modules": "^0.1.0",
     "webpack": "4.42.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "webpack-virtual-modules": "^0.3.0"
+  }
 }
