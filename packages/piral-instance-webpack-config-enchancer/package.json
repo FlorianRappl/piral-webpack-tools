@@ -1,0 +1,34 @@
+{
+  "name": "piral-instance-webpack-config-enchancer",
+  "version": "0.1.0",
+  "description": "Webpack enchancer for generating a valid Piral instance bundle.",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlorianRappl/piral-webpack-tools.git"
+  },
+  "engines": {
+    "node": ">= 8"
+  },
+  "keywords": [
+    "piral-cli",
+    "piral",
+    "plugin",
+    "webpack",
+    "command"
+  ],
+  "author": "Florian Rappl <mail@florian-rappl.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlorianRappl/piral-webpack-tools/issues"
+  },
+  "homepage": "https://github.com/FlorianRappl/piral-webpack-tools#readme",
+  "devDependencies": {
+    "webpack": "^5.4.0"
+  }
+}
