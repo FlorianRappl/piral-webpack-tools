@@ -49,7 +49,7 @@ function getExternals(piral: string) {
 }
 
 export class PiletWebpackPlugin implements Plugin {
-  constructor(private options: PiletWebpackPluginOptions) { }
+  constructor(private options: PiletWebpackPluginOptions) {}
 
   apply(compiler: Compiler) {
     const environment = process.env.NODE_ENV || 'development';
@@ -60,9 +60,7 @@ export class PiletWebpackPlugin implements Plugin {
       ...getVariables(name, version, environment),
       ...this.options.variables,
     };
-    const plugins = [
-      new DefinePlugin(getDefineVariables(variables)),
-    ];
+    const plugins = [new DefinePlugin(getDefineVariables(variables))];
 
     if (schema !== 'none') {
       const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
@@ -100,8 +98,8 @@ export class PiletWebpackPlugin implements Plugin {
       compiler.options.externals = Array.isArray(current)
         ? [...current, ...externals]
         : current
-          ? [current, ...externals]
-          : externals;
+        ? [current, ...externals]
+        : externals;
     });
   }
 }

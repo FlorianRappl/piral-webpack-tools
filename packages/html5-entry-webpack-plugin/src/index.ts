@@ -5,7 +5,7 @@ import { join, dirname } from 'path';
 import { Compiler, Plugin } from 'webpack';
 import { getTemplates, extractParts, setEntries } from './helpers';
 
-export interface Html5EntryWebpackPluginOptions extends Omit<HtmlWebpackPlugin.Options, "templateContent"> {}
+export interface Html5EntryWebpackPluginOptions extends Omit<HtmlWebpackPlugin.Options, 'templateContent'> {}
 
 export class Html5EntryWebpackPlugin implements Plugin {
   constructor(private options: Html5EntryWebpackPluginOptions = {}) {}

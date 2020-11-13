@@ -3,7 +3,7 @@ export function getVariables(
   version: string,
   externals: Array<string>,
   env: string,
-): Record<string, string> {
+): Record<string, boolean | string> {
   return {
     NODE_ENV: env,
     BUILD_TIME: new Date().toDateString(),
@@ -14,11 +14,11 @@ export function getVariables(
   };
 }
 
-export function setEnvironment(variables: Record<string, string>) {
-  Object.keys(variables).forEach(key => (process.env[key] = variables[key]));
+export function setEnvironment(variables: Record<string, boolean | string>) {
+  Object.keys(variables).forEach(key => (process.env[key] = String(variables[key])));
 }
 
-export function getDefineVariables(variables: Record<string, string>) {
+export function getDefineVariables(variables: Record<string, boolean | string>) {
   return Object.entries(variables).reduce((obj, [name, value]) => {
     obj[`process.env.${name}`] = JSON.stringify(value);
     return obj;
