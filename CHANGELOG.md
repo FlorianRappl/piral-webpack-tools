@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.5 (January 12, 2021)
+
+* Improved `link` resolution in the `html5-entry-webpack-plugin`
+* Updated dependencies
+
 ## 0.6.4 (September 7, 2020)
 
 * Published `import-maps-webpack-plugin`

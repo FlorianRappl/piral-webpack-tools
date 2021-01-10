@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/FlorianRappl/piral-webpack-tools#readme",
   "devDependencies": {
-    "@types/cheerio": "^0.22.17",
+    "@types/cheerio": "^0.22.23",
     "webpack": "4.42.0"
   },
   "dependencies": {
