@@ -1,5 +1,9 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.7 (May 5, 2021)
+
+* Improved wiring up `html-webpack-plugin`
+
 ## 0.6.6 (January 13, 2021)
 
 * Fixed usage of Cheerio static w.r.t. `TagElement`
