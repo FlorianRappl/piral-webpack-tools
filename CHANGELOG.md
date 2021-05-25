@@ -1,5 +1,9 @@
 # Piral Webpack Tools Changelog
 
+## 0.6.8 (May 25, 2021)
+
+* Fixed `v0` bannerSuffix logic.
+
 ## 0.6.7 (May 5, 2021)
 
 * Improved wiring up `html-webpack-plugin`
