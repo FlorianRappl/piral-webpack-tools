@@ -1,6 +1,6 @@
 {
   "name": "import-maps-webpack-plugin",
-  "version": "0.6.6",
+  "version": "0.6.8",
   "description": "A plugin for providing static import maps support to Webpack.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -37,5 +37,6 @@
   },
   "dependencies": {
     "webpack-virtual-modules": "^0.3.0"
-  }
+  },
+  "gitHead": "d8766113afb41e6962a01b71121403c979d5a803"
 }
