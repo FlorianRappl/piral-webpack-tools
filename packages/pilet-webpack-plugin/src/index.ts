@@ -65,7 +65,7 @@ export class PiletWebpackPlugin implements Plugin {
     ];
 
     if (schema !== 'none') {
-      const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
+      const bannerSuffix = schema === 'v1' ? `1(${jsonpFunction})` : `0`;
 
       plugins.push(
         new BannerPlugin({
