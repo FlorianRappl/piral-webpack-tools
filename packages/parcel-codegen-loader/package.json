@@ -35,6 +35,5 @@
   "dependencies": {
     "loader-utils": "^2.0.0",
     "schema-utils": "^2.6.5"
-  },
-  "gitHead": "d8766113afb41e6962a01b71121403c979d5a803"
+  }
 }
