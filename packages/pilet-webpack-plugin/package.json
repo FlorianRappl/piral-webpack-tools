@@ -1,6 +1,6 @@
 {
   "name": "pilet-webpack-plugin",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "Webpack plugin for generating a valid pilet bundle.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

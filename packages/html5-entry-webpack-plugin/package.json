@@ -1,6 +1,6 @@
 {
   "name": "html5-entry-webpack-plugin",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "Webpack plugin for allowing HTML files as entry modules.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
