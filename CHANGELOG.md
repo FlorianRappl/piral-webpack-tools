@@ -1,5 +1,11 @@
 # Piral Webpack Tools Changelog
 
+## 0.7.0 (September 15, 2021)
+
+* Updated dependencies
+* Removed the `import-maps-webpack-plugin`
+* Added support for the pilet schema v2
+
 ## 0.6.8 (May 25, 2021)
 
 * Fixed `v0` bannerSuffix logic.
