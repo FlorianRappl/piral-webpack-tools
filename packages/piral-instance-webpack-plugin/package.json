@@ -1,6 +1,6 @@
 {
   "name": "piral-instance-webpack-plugin",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Webpack plugin for generating a valid Piral instance bundle.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

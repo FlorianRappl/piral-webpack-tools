@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.8.0 (September 12, 2021)
+
+* Updated dependencies
+* Support for v0 schema in `pilet-webpack-plugin`
+
 ## 0.7.0 (September 15, 2021)
 
 * Updated dependencies

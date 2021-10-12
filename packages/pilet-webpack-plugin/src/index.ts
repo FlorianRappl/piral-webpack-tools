@@ -28,6 +28,35 @@ export class PiletWebpackPlugin implements Plugin {
     return plugins;
   }
 
+  piletV0WebpackConfigEnhancer(compiler: Compiler) {
+    const { name } = this.options;
+    const config = compiler.options;
+    const shortName = name.replace(/\W/gi, '');
+    const prName = `wp4Chunkpr_${shortName}`;
+    const [mainEntry] = Object.keys(config.entry);
+
+    setEnvironment(this.variables);
+    withExternals(config, this.externals);
+
+    const plugins = [
+      new DefinePlugin(getDefineVariables(this.variables)),
+      new BannerPlugin({
+        banner: `//@pilet v:0`,
+        entryOnly: true,
+        include: `${mainEntry}.js`,
+        raw: true,
+      }),
+    ];
+
+    compiler.hooks.afterEnvironment.tap(pluginName, () => {
+      config.output.jsonpFunction = `${prName}`;
+      config.output.library = name;
+      config.output.libraryTarget = 'umd';
+    });
+
+    return plugins;
+  }
+
   piletV1WebpackConfigEnhancer(compiler: Compiler) {
     const { name } = this.options;
     const config = compiler.options;
@@ -101,11 +130,12 @@ export class PiletWebpackPlugin implements Plugin {
     this.externals = externals;
 
     switch (schema) {
+      case 'v0':
+        return this.piletV0WebpackConfigEnhancer(compiler);
       case 'v1':
         return this.piletV1WebpackConfigEnhancer(compiler);
       case 'v2':
         return this.piletV2WebpackConfigEnhancer(compiler);
-      case 'v0':
       case 'none':
       default:
         return this.piletVxWebpackConfigEnhancer(compiler);
