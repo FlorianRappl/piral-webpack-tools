@@ -1,5 +1,9 @@
 # Piral Webpack Tools Changelog
 
+## 0.8.1 (January 17, 2022)
+
+* Support for array externals in `pilet-webpack-plugin`
+
 ## 0.8.0 (September 12, 2021)
 
 * Updated dependencies
