@@ -1,6 +1,6 @@
 {
   "name": "parcel-codegen-loader",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A loader for .codegen files to auto-generate modules on the fly.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -35,5 +35,6 @@
   "dependencies": {
     "loader-utils": "^2.0.0",
     "schema-utils": "^2.6.5"
-  }
+  },
+  "gitHead": "b03ec9ab419f7fdfdabd0c46558b1993229067c4"
 }

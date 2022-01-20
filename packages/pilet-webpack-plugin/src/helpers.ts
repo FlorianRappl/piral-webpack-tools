@@ -58,7 +58,7 @@ export function getDependencies(importmap: Array<SharedDependency>, compilerOpti
 }
 
 export function withExternals(compilerOptions: Configuration, externals: Array<string>) {
-  const current = compilerOptions.externals;
+  const current = compilerOptions.externals || [];
   const arrayExternals = Array.isArray(current) ? current : [current];
 
   const objectExternal = externals.reduce((external, dep) => {

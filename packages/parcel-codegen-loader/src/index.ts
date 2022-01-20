@@ -28,19 +28,24 @@ export default async function loader(source: string, map: string, meta: any) {
   const name = this.resourcePath;
   const compiler = this._compiler as Compiler;
   const callback = this.async();
-  const generator = reloadGenerator(name);
-  const content = await generator.call({
-    name,
-    options: {
-      outDir: compiler?.options?.output?.path,
-      rootDir: process.cwd(),
-    },
-    addDependency: (file: string, options: DependencyOptions = {}) => this.addDependency(file),
-  });
 
-  if (typeof content === 'string') {
-    callback(null, content, map, meta);
-  } else {
-    callback(new Error('Unsupported return type from codegen.'), source);
+  try {
+    const generator = reloadGenerator(name);
+    const content = await generator.call({
+      name,
+      options: {
+        outDir: compiler?.options?.output?.path,
+        rootDir: process.cwd(),
+      },
+      addDependency: (file: string, options: DependencyOptions = {}) => this.addDependency(file),
+    });
+
+    if (typeof content === 'string') {
+      callback(null, content, map, meta);
+    } else {
+      callback(new Error('Unsupported return type from codegen.'), source);
+    }
+  } catch (err) {
+    callback(err, source);
   }
 }

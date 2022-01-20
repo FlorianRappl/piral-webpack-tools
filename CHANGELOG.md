@@ -1,5 +1,10 @@
 # Piral Webpack Tools Changelog
 
+## 0.8.2 (January 20, 2022)
+
+* Improved externals in `pilet-webpack-plugin`
+* Improved error handling of parcel-codegen-loader
+
 ## 0.8.1 (January 17, 2022)
 
 * Support for array externals in `pilet-webpack-plugin`

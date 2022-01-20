@@ -1,6 +1,6 @@
 {
   "name": "pilet-webpack-plugin",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Webpack plugin for generating a valid pilet bundle.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -30,5 +30,6 @@
   "homepage": "https://github.com/FlorianRappl/piral-webpack-tools#readme",
   "devDependencies": {
     "webpack": "4.42.0"
-  }
+  },
+  "gitHead": "b03ec9ab419f7fdfdabd0c46558b1993229067c4"
 }
