@@ -2,7 +2,7 @@
 
 # Piral Webpack Tools
 
-![Azure Build Status](https://dev.azure.com/FlorianRappl/piral-cli-plugins/_apis/build/status/FlorianRappl.piral-cli-webpack?branchName=master) ![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Azure Build Status](https://dev.azure.com/FlorianRappl/piral-cli-plugins/_apis/build/status/FlorianRappl.piral-cli-webpack?branchName=main) ![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 This repository contains the packages used to enable Webpack support in Piral. We support multiple options.
 
