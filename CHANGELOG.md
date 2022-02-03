@@ -1,9 +1,13 @@
 # Piral Webpack Tools Changelog
 
+## 0.8.3 (February 3, 2022)
+
+* Added support for `requireId` in shared dependency model
+
 ## 0.8.2 (January 20, 2022)
 
 * Improved externals in `pilet-webpack-plugin`
-* Improved error handling of parcel-codegen-loader
+* Improved error handling of `parcel-codegen-loader`
 
 ## 0.8.1 (January 17, 2022)
 
